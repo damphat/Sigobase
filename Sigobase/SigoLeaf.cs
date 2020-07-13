@@ -43,7 +43,7 @@ namespace Sigobase {
         }
 
         public override int GetHashCode() {
-            return 0;
+            return Data != null ? Data.GetHashCode() : 0;
         }
     }
 }

@@ -164,7 +164,14 @@ namespace Sigobase {
         }
 
         public override int GetHashCode() {
-            return 0;
+            unchecked {
+                var hash = (Flags & 7) * 11;
+                foreach (var e in dict) {
+                    hash += e.Key.GetHashCode() * 7 + e.Value.GetHashCode() * 3;
+                }
+
+                return hash;
+            }
         }
     }
 }
