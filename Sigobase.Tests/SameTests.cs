@@ -4,7 +4,7 @@ using Xunit;
 namespace Sigobase.Tests {
     public class SameTests {
         [Fact]
-        public void SigoTree_are_same_if_they_are_referenceEquals() {
+        public void Trees_only_compare_using_referenceEquals() {
             var tree1 = Sigo.Create(3).Set1("k", Sigo.From("v"));
             var tree2 = Sigo.Create(3).Set1("k", Sigo.From("v"));
 
@@ -14,7 +14,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void SigoLeaf_are_same_if_their_data_equals() {
+        public void Leafs_compare_data_using_equals() {
             var v1 = Sigo.From("v");
             var v2 = Sigo.From("v");
             var x1 = Sigo.From("x");

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using Sigobase.Database;
+using Sigobase.Utils;
 using Xunit;
 
 namespace Sigobase.Tests {
-    public class Set1_Leaf_Tests {
+    public class Set1_leaf_tests {
         private ISigo s = Sigo.From("s");
 
         [Fact]
-        public void Returns_self() {
+        public void Return_self() {
             Assert.Same(s, s.Set1("k", Sigo.Create(3)));
         }
 
@@ -17,7 +18,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Return_tree_kv() {
+        public void Return_treeWith1Child() {
             var values = new List<ISigo> {
                 Sigo.From("v"),
                 Sigo.Create(0),
@@ -37,15 +38,17 @@ namespace Sigobase.Tests {
         }
     }
 
-    public class Set1_Tree_Tests {
+    public class Set1_tree_tests {
         private ISigo v1 = Sigo.From("v1");
         private ISigo v2 = Sigo.From("v2");
         private ISigo e0 = Sigo.Create(0);
+        private ISigo e3 = Sigo.Create(3);
         private ISigo e4 = Sigo.Create(4);
         private ISigo e6 = Sigo.Create(6);
+        private ISigo e7 = Sigo.Create(7);
 
         [Fact]
-        public void AddTest() {
+        public void AddNewChild() {
             var s = Sigo.Create(0);
             s = s.Set1("k1", v1);
             s = s.Set1("k2", v2);
@@ -56,8 +59,8 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Remove() {
-            var s = Sigo.Create(0);
+        public void RemoveAnExistingChild() {
+            var s = e0;
             // add
             s = s.Set1("k1", v1);
             s = s.Set1("k2", v2);
@@ -76,8 +79,8 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Change() {
-            var s = Sigo.Create(0);
+        public void ChangeAnExistingChild() {
+            var s = e0;
             // add
             s = s.Set1("k", v1);
 
@@ -89,26 +92,41 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Change_flags() {
-            var s = e0;
-            // add
-            s = s.Set1("k", e4);
+        public void ChangeFlagsOnly() {
+            var s0 = e0.Set1("k", e3);
 
-            // assert nothing added, just upgrade parent flags e0 -> e6
-            Assert.Equal(e0, s.Get1("k"));
-            Assert.Equal(e6, s);
+            // change parent proton by adding a child with L effect
+            var s1 = s0.Set1("k2", e4);
+
+            Assert.Same(s0, s1);
+            Assert.Equal(e3, s1.Get1("k"));
+            Assert.Equal(Bits.LM, s1.Flags & Bits.LMR);
+        }
+
+        [Fact]
+        public void Donot_createNewObject_ifNothingChange() {
+            var v = Sigo.From("v");
+            var s = e3.Set1("k", v).Freeze();
+
+            Assert.Same(s, s.Set1("k", v));
+            Assert.Same(s, s.Set1("k1", e3));
+            Assert.Same(s, s.Set1("k1", e7));
+
+            // using Sigo.Same(), insteadOf referenceEquals
+            Assert.Same(s, s.Set1("k", Sigo.From("v")));
         }
     }
 
-    public class Set1_Tree_frozen_Tests {
+    public class Set1_tree_frozen_tests {
         private ISigo v1 = Sigo.From("v1");
         private ISigo v2 = Sigo.From("v2");
         private ISigo e0 = Sigo.Create(0);
+        private ISigo e3 = Sigo.Create(3);
         private ISigo e4 = Sigo.Create(4);
         private ISigo e6 = Sigo.Create(6);
 
         [Fact]
-        public void AddTest() {
+        public void AddNewChild() {
             var s0 = Sigo.Create(0);
             var s1 = s0.Set1("k1", v1).Freeze();
             var s2 = s1.Set1("k2", v2).Freeze();
@@ -119,7 +137,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Remove() {
+        public void RemoveAnExistingChild() {
             var s0 = Sigo.Create(0);
             // add
             var s1 = s0.Set1("k1", v1).Freeze();
@@ -139,7 +157,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Change() {
+        public void ChangeAnExistingChild() {
             var s0 = Sigo.Create(0);
             // add
             var s1 = s0.Set1("k", v1).Freeze();
@@ -152,14 +170,14 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Change_flags() {
-            var s0 = e0;
-            // add
-            var s1 = s0.Set1("k", e4).Freeze();
+        public void ChangeFlagsOnly() {
+            var s0 = e0.Set1("k", e3).Freeze();
 
-            // assert nothing added, just upgrade parent flags e0 -> e6
-            Assert.Equal(e0, s1.Get1("k"));
-            Assert.Equal(e6, s1);
+            // change parent proton by adding a child with L effect
+            var s1 = s0.Set1("k2", e4).Freeze();
+
+            Assert.Equal(e3, s1.Get1("k"));
+            Assert.Equal(Bits.LM, s1.Flags & Bits.LMR);
         }
     }
 }

@@ -4,16 +4,18 @@ using Xunit;
 namespace Sigobase.Tests {
     public class CreateTests {
         [Fact]
-        public void WithEmptyPath_return_the_value() {
-            var v = Sigo.From("v");
+        public void AllowPathWithoutKeys_returnTheChild() {
+            // TODO should we disallow empty paths?
 
-            Assert.Equal(v, Sigo.Create(3, null, v));
-            Assert.Equal(v, Sigo.Create(3, "", v));
-            Assert.Equal(v, Sigo.Create(3, "/", v));
+            var child = Sigo.From("child");
+
+            Assert.Equal(child, Sigo.Create(3, null, child));
+            Assert.Equal(child, Sigo.Create(3, "", child));
+            Assert.Equal(child, Sigo.Create(3, "/", child));
         }
 
         [Fact]
-        public void WithPath() {
+        public void AllowPath() {
             var user = Sigo.Create(3,
                 "name/first", "Phat",
                 "name/last", "Dam",
@@ -25,7 +27,8 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Allow_duplicated_path_the_last_is_used() {
+        public void AllowPathDuplicated_overwritingChild() {
+            // TODO should we disallow overwriting
             var user = Sigo.Create(3,
                 "user/id", 100.0,
                 "user/id", 200.0,
@@ -35,7 +38,9 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Path_can_be_any_types_convertable_to_string() {
+        public void AllowPathFromObject() {
+            // TODO object to path specification
+            // TODO in strict mode, only non empty strings and integers are allows 
             var paths = new object[] {true, false, 1.5, 'c'};
             foreach (var path in paths) {
                 var sigo = Sigo.Create(3, path, "v");

@@ -3,33 +3,36 @@ using Xunit;
 
 namespace Sigobase.Tests {
     public class FreezeTests {
+        ISigo tree = Sigo.Create(3, "k", "v");
+        ISigo leaf = Sigo.From("v");
+        ISigo e3 = Sigo.Create(3);
+        
+
         [Fact]
-        public void Trees() {
-            var user0 = Sigo.Create(3, "name", "Phat");
-
-            // trees are mutable before calling freeze()
-            Assert.False(user0.IsFrozen());
-
-            // freeze twice
-            var user1 = user0.Freeze();
-            var user2 = user1.Freeze();
-
-            Assert.True(user2.IsFrozen());
-            Assert.Same(user0, user1);
-            Assert.Same(user1, user2);
+        public void Freeze_always_returns_self() {
+            Assert.Same(tree, tree.Freeze());
+            Assert.Same(leaf, leaf.Freeze());
+            Assert.Same(e3, e3.Freeze());
         }
 
         [Fact]
-        public void Leafs() {
-            var v0 = Sigo.From("v");
+        public void NonEmptyTree_areNotFrozen_after_creating_or_changing() {
+            // non empty tree are not frozen after creating
+            Assert.False(tree.IsFrozen());
 
-            // leafs are frozen by default
-            Assert.True(v0.IsFrozen());
+            // not frozen after changing
+            tree = tree.Freeze().Set1("v", Sigo.From("v+"));
+            Assert.False(tree.IsFrozen());            
 
-            // return self
-            var v1 = v0.Freeze();
-            Assert.Same(v0, v1);
-            Assert.True(v1.IsFrozen());
+            // leafs and elements are frozen always frozen
+            Assert.True(leaf.IsFrozen());
+            Assert.True(e3.IsFrozen());
+        }
+
+        [Fact]
+        public void Frozen_a_nonFrozen() {
+          tree.Freeze();
+          Assert.True(tree.IsFrozen());
         }
     }
 }

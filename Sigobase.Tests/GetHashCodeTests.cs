@@ -6,7 +6,7 @@ using Xunit;
 namespace Sigobase.Tests {
     public class GetHashCodeTests {
         [Fact]
-        public void Sigo_equals_then_hash_equal() {
+        public void If_sigosAreEqual_then_hashsAreEqual() {
             var sigos = new List<ISigo> {
                 Sigo.From("a"),
                 Sigo.From("a"),
@@ -32,7 +32,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Be_careful_of_arithmetic_overflow() {
+        public void BeCarefulOf_arithmeticOverflow() {
             var s1 = Sigo.Create(3, "k1", int.MaxValue, "k2", int.MaxValue);
             var s2 = Sigo.Create(3, "k2", int.MaxValue, "k1", int.MaxValue);
             Assert.Equal(ImplGetHashCode.GetHashCode(s1), ImplGetHashCode.GetHashCode(s2));

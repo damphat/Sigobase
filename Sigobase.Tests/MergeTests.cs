@@ -11,7 +11,10 @@ namespace Sigobase.Tests {
                 "b", "b"
             );
 
+            // add "/a/z": az
             var b = Sigo.Create(0, "a/z", "az");
+
+            // change "/b": "b+"
             var c = Sigo.Create(0, "b", "b+");
 
             var abc1 = Sigo.Merge(Sigo.Merge(a, b), c);
