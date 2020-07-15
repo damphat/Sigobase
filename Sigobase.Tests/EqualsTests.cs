@@ -63,7 +63,6 @@ namespace Sigobase.Tests {
             Assert.NotEqual(b, c);
         }
 
-
         [Fact]
         public void Trees_doNotCompare_neutronBits() {
             var a = Sigo.Create(3, "k", "v");
@@ -81,7 +80,6 @@ namespace Sigobase.Tests {
 
             Assert.Equal(a, b);
         }
-
 
         [Fact]
         public void Trees_compare_deeply() {

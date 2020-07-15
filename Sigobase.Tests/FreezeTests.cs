@@ -3,10 +3,9 @@ using Xunit;
 
 namespace Sigobase.Tests {
     public class FreezeTests {
-        ISigo tree = Sigo.Create(3, "k", "v");
-        ISigo leaf = Sigo.From("v");
-        ISigo e3 = Sigo.Create(3);
-        
+        private ISigo tree = Sigo.Create(3, "k", "v");
+        private ISigo leaf = Sigo.From("v");
+        private ISigo e3 = Sigo.Create(3);
 
         [Fact]
         public void Freeze_always_returns_self() {
@@ -22,7 +21,7 @@ namespace Sigobase.Tests {
 
             // not frozen after changing
             tree = tree.Freeze().Set1("v", Sigo.From("v+"));
-            Assert.False(tree.IsFrozen());            
+            Assert.False(tree.IsFrozen());
 
             // leafs and elements are frozen always frozen
             Assert.True(leaf.IsFrozen());
@@ -31,8 +30,8 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Frozen_a_nonFrozen() {
-          tree.Freeze();
-          Assert.True(tree.IsFrozen());
+            tree.Freeze();
+            Assert.True(tree.IsFrozen());
         }
     }
 }
