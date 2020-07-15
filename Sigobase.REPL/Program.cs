@@ -2,8 +2,8 @@
 using Sigobase.Database;
 
 namespace Sigobase.REPL {
-    class Program {
-        static void Main(string[] args) {
+    internal class Program {
+        private static void Main(string[] args) {
             var user = Sigo.Create(1,
                 "name", Sigo.Create(1,
                     "first", "Phat",

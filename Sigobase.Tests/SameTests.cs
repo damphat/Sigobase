@@ -9,7 +9,7 @@ namespace Sigobase.Tests {
             var tree2 = Sigo.Create(3).Set1("k", Sigo.From("v"));
 
             Assert.True(Sigo.Same(tree1, tree1));
-            
+
             Assert.False(Sigo.Same(tree1, tree2));
         }
 

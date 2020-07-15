@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Sigobase.Database;
+﻿using Sigobase.Database;
 using Xunit;
 
 namespace Sigobase.Tests {
@@ -18,7 +15,6 @@ namespace Sigobase.Tests {
             Assert.Equal("Phat", user.Get1("name").Get1("first").Data);
             Assert.Equal("Dam", user.Get1("name").Get1("last").Data);
             Assert.Equal(true, user.Get1("male").Data);
-
         }
     }
 }

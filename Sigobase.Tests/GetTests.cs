@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Sigobase.Database;
 using Xunit;
@@ -7,8 +6,8 @@ using Xunit;
 namespace Sigobase.Tests {
     public class GetTests {
         private ISigo V;
-        private ISigo A ;
-        private ISigo B ;
+        private ISigo A;
+        private ISigo B;
         private ISigo AB;
 
         private ISigo[] E;
@@ -22,16 +21,13 @@ namespace Sigobase.Tests {
             AB = Sigo.Create(3, "A", A, "B", B);
 
             E = new ISigo[8];
-            for (int i = 0; i < 8; i++) {
+            for (var i = 0; i < 8; i++) {
                 E[i] = Sigo.Create(i);
             }
 
-
             All = new List<ISigo> {A, B, AB, V};
             All.AddRange(E);
-
         }
-
 
         [Fact]
         public void Return_self() {
@@ -43,13 +39,12 @@ namespace Sigobase.Tests {
                     Assert.Same(sigo, sigo.Get(path));
                 }
             }
-
         }
 
         [Fact]
         public void Return_using_Get1() {
-            var sigos = new[] { A, V, E[0] };
-            var paths = new[] { "x", "/x/", "z", "/z/"};
+            var sigos = new[] {A, V, E[0]};
+            var paths = new[] {"x", "/x/", "z", "/z/"};
 
             foreach (var sigo in sigos) {
                 foreach (var path in paths) {
@@ -61,9 +56,9 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Return_using_Get1_Get1() {
-            var sigos = new[] { AB, V, E[0] };
+            var sigos = new[] {AB, V, E[0]};
             var paths = new[] {
-                "A/x", "A/y", "A/z", 
+                "A/x", "A/y", "A/z",
                 "B/x", "B/y", "B/z",
                 "C/x", "C/y", "C/z"
             };
@@ -73,13 +68,11 @@ namespace Sigobase.Tests {
                     var keys = path.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
 
                     Assert.Same(
-                        sigo.Get1(keys[0]).Get1(keys[1]), 
+                        sigo.Get1(keys[0]).Get1(keys[1]),
                         sigo.Get(path)
-                        );
+                    );
                 }
             }
         }
-
-
     }
 }

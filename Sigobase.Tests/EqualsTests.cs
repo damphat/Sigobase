@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Sigobase.Database;
 using Xunit;
 
@@ -15,10 +12,10 @@ namespace Sigobase.Tests {
                 Sigo.From(1),
                 Sigo.From(2),
                 Sigo.From("a"),
-                Sigo.From("b"),
+                Sigo.From("b")
             };
 
-            for (int i = 0; i < 8; i++) {
+            for (var i = 0; i < 8; i++) {
                 diffs.Add(Sigo.Create(i));
             }
 
@@ -62,7 +59,6 @@ namespace Sigobase.Tests {
             );
 
             Assert.Equal(s1, s2);
-
         }
     }
 }

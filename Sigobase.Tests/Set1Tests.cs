@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Sigobase.Database;
-using Sigobase.Utils;
 using Xunit;
 
 namespace Sigobase.Tests {
@@ -101,9 +98,7 @@ namespace Sigobase.Tests {
             Assert.Equal(e0, s.Get1("k"));
             Assert.Equal(e6, s);
         }
-
     }
-
 
     public class Set1_Tree_frozen_Tests {
         private ISigo v1 = Sigo.From("v1");
@@ -120,7 +115,7 @@ namespace Sigobase.Tests {
 
             Assert.Equal(v1, s2.Get1("k1"));
             Assert.Equal(v2, s2.Get1("k2"));
-            Assert.Equal(256 * 2 + 16 + 6 , s2.Flags);
+            Assert.Equal(256 * 2 + 16 + 6, s2.Flags);
         }
 
         [Fact]
@@ -153,7 +148,7 @@ namespace Sigobase.Tests {
             var s2 = s1.Set1("k", v2).Freeze();
 
             Assert.Equal(v2, s2.Get1("k"));
-            Assert.Equal(256 + 16 +  6, s2.Flags);
+            Assert.Equal(256 + 16 + 6, s2.Flags);
         }
 
         [Fact]
@@ -166,6 +161,5 @@ namespace Sigobase.Tests {
             Assert.Equal(e0, s1.Get1("k"));
             Assert.Equal(e6, s1);
         }
-
     }
 }

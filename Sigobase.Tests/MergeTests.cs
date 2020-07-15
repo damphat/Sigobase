@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Sigobase.Tests {
     public class MergeTests {
-
         [Fact]
         public void Associative_property() {
             var a = Sigo.Create(1,

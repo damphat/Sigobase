@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Sigobase.Database;
+﻿using Sigobase.Database;
 using Xunit;
 
 namespace Sigobase.Tests {
@@ -18,7 +15,7 @@ namespace Sigobase.Tests {
         [Fact]
         public void WithPath() {
             var user = Sigo.Create(3,
-                "name/first", "Phat", 
+                "name/first", "Phat",
                 "name/last", "Dam",
                 "male", true);
 
