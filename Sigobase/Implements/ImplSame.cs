@@ -4,7 +4,8 @@ using Sigobase.Utils;
 namespace Sigobase.Implements {
     public static class ImplSame {
         /// <summary>
-        /// 
+        /// Lightweight implementation of comparison
+        /// see Object.is() in javascript
         /// </summary>
         public static bool Same(ISigo a, ISigo b) {
             if (ReferenceEquals(a, b)) {
