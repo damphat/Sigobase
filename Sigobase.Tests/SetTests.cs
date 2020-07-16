@@ -3,8 +3,6 @@ using Xunit;
 
 namespace Sigobase.Tests {
     public class SetTests {
-        private ISigo v = Sigo.From("v");
-
         [Fact]
         public void See_createTests() {
             var user = Sigo.Create(1);
