@@ -12,6 +12,10 @@ namespace Sigobase.Database {
             return ImplFrom.From(o);
         }
 
+        public static ISigo Clone(this ISigo sigo) {
+            return ImplClone.Clone(sigo);
+        }
+
         public static bool Same(this ISigo sigo, ISigo other) {
             return ImplSame.Same(sigo, other);
         }
