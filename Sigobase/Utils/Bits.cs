@@ -1,15 +1,25 @@
 ﻿namespace Sigobase.Utils {
     /// <summary>
-    /// Flags methods
+    /// Flags constants and methods
     /// </summary>
     internal static class Bits {
-        // there are N flag bits, the rest bits of int for store the count
+        // there are N flag bits, the rest bits are the count of children
         public const int N = 8;
 
         /// <summary>
         /// The mask of count part
         /// </summary>
         public const int C = -(1 << N);
+
+        /// <summary>
+        /// Neutron solid
+        /// </summary>
+        public const int S = 64;
+
+        /// <summary>
+        /// Neutron owned
+        /// </summary>
+        public const int O = 32;
 
         /// <summary>
         /// Frozen, the sigo is immutable
@@ -113,6 +123,7 @@
         /// Children can change parent flags
         /// </summary>
         public static int LeftEffect(int pf, int cf) {
+            // issue: add proton L
             return (cf & L) != 0 ? pf | LM : pf;
         }
 
