@@ -1,10 +1,10 @@
 ﻿using Sigobase.Database;
 using Xunit;
 
-namespace Sigobase.Tests {
-    public class MergeTests {
+namespace Sigobase.Tests.MergeTests {
+    public class OperatorPropertiesTests {
         [Fact]
-        public void Associative_property() {
+        public void Associative() {
             var a = Sigo.Create(1,
                 "a/x", "ax",
                 "a/y", "ay",

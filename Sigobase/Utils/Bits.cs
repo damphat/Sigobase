@@ -154,5 +154,13 @@
         public static int Def(int f) {
             return (f & R) != 0 ? MR : 0;
         }
+
+        public static bool HasM(int f) {
+            return (f & M) != 0;
+        }
+
+        public static bool HasR(int f) {
+            return (f & R) != 0;
+        }
     }
 }
