@@ -162,5 +162,9 @@
         public static bool HasR(int f) {
             return (f & R) != 0;
         }
+
+        public static bool HasL(int f) {
+            return (f & L) != 0;
+        }
     }
 }
