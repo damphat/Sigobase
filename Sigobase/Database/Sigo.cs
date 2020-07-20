@@ -9,7 +9,11 @@ namespace Sigobase.Database {
         }
 
         public static ISigo From(object o) {
+#if TESTMODE
+            return ImplFromNoCaches.From(o);
+#else
             return ImplFrom.From(o);
+#endif
         }
 
         public static ISigo Clone(this ISigo sigo) {
