@@ -6,6 +6,9 @@ namespace Sigobase.Database {
 
         public SigoLeaf(object data) {
             Data = data;
+#if TESTMODE
+            Id = Utils.TestMode.GetID(this);
+#endif
         }
 
         public ISigo Get1(string key) {
@@ -34,5 +37,10 @@ namespace Sigobase.Database {
         public bool Equals(ISigo other) {
             return Sigo.Equals(this, other);
         }
+
+#if TESTMODE
+        public int Id { get; private set; }
+        public string Debug => $"({Id}-{ToString()})";
+#endif
     }
 }

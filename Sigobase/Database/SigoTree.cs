@@ -5,6 +5,9 @@ namespace Sigobase.Database {
     internal class SigoTree : ReadOnlyDictionary, ISigo {
         public SigoTree(int flags, Dict dict) : base(dict) {
             Flags = flags;
+#if TESTMODE
+            Id = Utils.TestMode.GetID(this);
+#endif
         }
 
         public SigoTree(int flags) : this(flags, new Dict()) { }
@@ -126,5 +129,29 @@ namespace Sigobase.Database {
         public bool Equals(ISigo other) {
             return Sigo.Equals(this, other);
         }
+
+#if TESTMODE
+        public int Id { get; private set; }
+        public string Debug {
+            get {
+                var sb = new StringBuilder();
+                sb.Append('{');
+                sb.Append(Id);
+                sb.Append('-');
+                if (this.IsFrozen()) {
+                    sb.Append('F');
+                }
+
+                sb.Append(Bits.Proton(Flags));
+                foreach (var e in this) {
+                    sb.Append(',');
+                    sb.Append(e.Key).Append(':').Append(e.Value);
+                }
+
+                sb.Append('}');
+                return sb.ToString();
+            }
+        }
+#endif
     }
 }

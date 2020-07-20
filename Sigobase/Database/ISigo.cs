@@ -10,5 +10,10 @@ namespace Sigobase.Database {
         ISigo Set1(string key, ISigo value);
 
         ISigo Freeze();
+
+#if TESTMODE
+        int Id { get; }
+        string Debug { get; }
+#endif
     }
 }
