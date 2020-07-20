@@ -39,7 +39,7 @@ namespace Sigobase.Tests {
             }
         }
 
-        [Fact]
+        [Fact(Skip = "we disable caches in test mode")]
         public void Common_scalars_are_cached() {
             var inputs = new object[] {
                 true, false,
