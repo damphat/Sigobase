@@ -60,6 +60,10 @@ namespace Sigobase.Database {
             return ImplSet.Set(sigo, path, value);
         }
 
+        public static ISigo Set(this ISigo sigo, string path, object value) {
+            return ImplSet.Set(sigo, path, Sigo.From(value));
+        }
+
         public static ISigo Create(int lmr, params object[] pvs) {
             return ImplCreate.Create(lmr, pvs);
         }
