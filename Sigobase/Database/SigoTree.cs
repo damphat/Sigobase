@@ -51,6 +51,10 @@ namespace Sigobase.Database {
                 return this;
             }
 
+            if (Bits.IsEmpty(rf)) {
+                return Sigo.Create(Bits.Proton(rf));
+            }
+
             if (Bits.IsFrozen(rf)) {
                 return new SigoTree(Bits.RemoveFrozen(rf), DictClone());
             } else {
