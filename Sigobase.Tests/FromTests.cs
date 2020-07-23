@@ -39,24 +39,6 @@ namespace Sigobase.Tests {
             }
         }
 
-        [Fact(Skip = "we disable caches in test mode")]
-        public void Common_scalars_are_cached() {
-            var inputs = new object[] {
-                true, false,
-                0,
-                (int) sbyte.MinValue,
-                (int) sbyte.MaxValue,
-                ""
-            };
-
-            foreach (var scalar in inputs) {
-                var sigo1 = Sigo.From(scalar);
-                var sigo2 = Sigo.From(scalar);
-
-                Assert.Same(sigo1, sigo2);
-            }
-        }
-
         [Fact]
         public void Return_the_input_if_input_is_sigo() {
             var inputs = new object[] {

@@ -5,39 +5,15 @@ using Sigobase.Database;
 
 namespace Sigobase.Implements {
     public static class ImplFrom {
-        private static ISigo True = new SigoLeaf(true);
-        private static ISigo False = new SigoLeaf(false);
-        private static ISigo Empty = new SigoLeaf("");
-        private static ISigo[] Numbers;
-
-        static ImplFrom() {
-            Numbers = new ISigo[sbyte.MaxValue - sbyte.MinValue + 1];
-            for (var i = 0; i < Numbers.Length; i++) {
-                Numbers[i] = new SigoLeaf((double) sbyte.MinValue + i);
-            }
-        }
-
         public static ISigo From(bool b) {
-            return b ? True : False;
+            return new SigoLeaf(b);
         }
 
         public static ISigo From(double d) {
-            var fd = Math.Floor(d);
-            if (fd == d) {
-                var i = (int) fd;
-                if (i >= sbyte.MinValue && i <= sbyte.MaxValue) {
-                    return Numbers[i - sbyte.MinValue];
-                }
-            }
-
             return new SigoLeaf(d);
         }
 
         public static ISigo From(string s) {
-            if (string.IsNullOrEmpty(s)) {
-                return Empty;
-            }
-
             return new SigoLeaf(s);
         }
 
