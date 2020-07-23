@@ -7,7 +7,7 @@ namespace Sigobase.Database {
         public SigoLeaf(object data) {
             Data = data;
 #if TESTMODE
-            Id = Utils.TestMode.GetID(this);
+            Info = Utils.TestInfo.CreateInfo(this);
 #endif
         }
 
@@ -39,8 +39,7 @@ namespace Sigobase.Database {
         }
 
 #if TESTMODE
-        public int Id { get; private set; }
-        public string Debug => $"({Id}-{ToString()})";
+        public TestInfo Info { get; }
 #endif
     }
 }

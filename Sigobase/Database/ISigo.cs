@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sigobase.Utils;
 
 namespace Sigobase.Database {
     public interface ISigo : IReadOnlyDictionary<string, ISigo>, IEquatable<ISigo> {
@@ -12,8 +13,7 @@ namespace Sigobase.Database {
         ISigo Freeze();
 
 #if TESTMODE
-        int Id { get; }
-        string Debug { get; }
+        TestInfo Info { get; }
 #endif
     }
 }
