@@ -28,22 +28,6 @@ namespace Sigobase.Database {
             return ImplMergeSpec.Merge(sigo, other);
         }
 
-        public static ISigo Merge(params ISigo[] sigos) {
-            switch (sigos.Length) {
-                case 0: return Create(0);
-                case 1: return sigos[0];
-                case 2: return Merge(sigos[0], sigos[1]);
-                default: {
-                    var ret = sigos[0];
-                    for (var i = 1; i < sigos.Length; i++) {
-                        ret = Merge(ret, sigos[i]);
-                    }
-
-                    return ret;
-                }
-            }
-        }
-
         public static ISigo Get(this ISigo sigo, string path) {
             return ImplGet.Get(sigo, path);
         }
