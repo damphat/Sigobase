@@ -14,16 +14,14 @@ namespace Sigobase.Utils {
 
         public int Count => 0;
 
-        public bool ContainsKey(string key) {
-            throw new System.NotImplementedException();
-        }
+        public bool ContainsKey(string key) => false;
 
         public bool TryGetValue(string key, out ISigo value) {
             value = default;
             return false;
         }
 
-        public ISigo this[string key] => throw new System.NotImplementedException();
+        public ISigo this[string key] => throw new KeyNotFoundException();
 
         public IEnumerable<string> Keys {
             get { yield break; }
