@@ -76,7 +76,6 @@ namespace Sigobase.Database {
 
         public ISigo Set1(string key, ISigo value) {
             if (TryGetValue(key, out var old)) {
-                // TODO Same instead of ReferenceEquals
                 if (value.Same(old)) {
                     return this;
                 }
