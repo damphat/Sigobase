@@ -11,19 +11,28 @@
             Value = value;
         }
 
-        public string Src { get; }
-        public int End { get; }
-        public int Start { get; }
+        public Kind Kind { get; private set; }
+        public string Src { get; private set; }
+        public int Start { get; private set; }
+        public int End { get; private set; }
+        public int Separator { get; private set; }
 
-        public Kind Kind { get; }
-
-        public int Separator { get; }
         public string Raw => raw ??= Src.Substring(Start, End - Start);
 
-        public object Value { get; }
+        public object Value { get; private set; }
 
         public override string ToString() {
             return $"{Kind}:'{Raw}'";
+        }
+
+        public void Reset(Kind kind, string src, in int start, in int end, in int separator, object value = null) {
+            Kind = kind;
+            Src = src;
+            Start = start;
+            End = end;
+            Separator = separator;
+            Value = value;
+            raw = null;
         }
     }
 }

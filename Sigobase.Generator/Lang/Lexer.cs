@@ -10,10 +10,12 @@ namespace Sigobase.Generator.Lang {
         private readonly string src;
         private int start;
         private int end;
+        private int separator;
+        private Token token;
+
         private char c;
         private char quote;
         private StringBuilder sb = new StringBuilder();
-        private int separator;
 
         public Lexer(string src) {
             this.src = src;
@@ -27,7 +29,7 @@ namespace Sigobase.Generator.Lang {
             c = ++end < src.Length ? src[end] : Eof;
         }
 
-        public Token Read() {
+        private void ScanSeparator() {
             separator = 0;
             while (true) {
                 if (c == '\r' || c == '\n') {
@@ -40,6 +42,11 @@ namespace Sigobase.Generator.Lang {
                     break;
                 }
             }
+        }
+
+        public Token Read(Token token) {
+            this.token = token;
+            ScanSeparator();
 
             start = end;
 
@@ -71,13 +78,13 @@ namespace Sigobase.Generator.Lang {
             }
         }
 
-        private Token CreateToken(Kind kind) {
-
-            return new Token(kind, src, start, end, separator);
-        }
-
-        private Token CreateToken(Kind kind, object value) {
-            return new Token(kind, src, start, end, separator, value);
+        private Token CreateToken(Kind kind, object value = null) {
+            if(token == null) {
+                return new Token(kind, src, start, end, separator, value);
+            } else {
+                token.Reset(kind, src, start, end, separator, value);
+                return token;
+            }
         }
 
         private Token IdentifierToken() {

@@ -7,15 +7,15 @@ using Sigobase.Generator.Schemas;
 namespace Sigobase.Generator.Lang {
     class Parser {
         private Lexer lexer;
-        private Token t;
+        private Token t = null;
 
         private void Next() {
-            t = lexer.Read();
+            t = lexer.Read(t);
         }
 
         public Parser(Lexer lexer) {
             this.lexer = lexer;
-            t = lexer.Read();
+            t = lexer.Read(t);
         }
 
         public Schema ParseObject() {
