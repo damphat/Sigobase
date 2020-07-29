@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Text;
 using Sigobase.Database;
 
 namespace Sigobase.Utils {
 #if TESTMODE
     public class TestInfo {
-
-        private static List<TestInfo> _caches;
+        private static List<TestInfo> caches;
 
         static TestInfo() {
-            _caches = new List<TestInfo>();
+            caches = new List<TestInfo>();
         }
 
         private TestInfo(ISigo target) {
@@ -29,21 +27,21 @@ namespace Sigobase.Utils {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
-                lock (_caches) {
+                lock (caches) {
                     var count = 0;
-                    for (var i = 0; i < _caches.Count; i++) {
-                        if (_caches[i] != null) {
-                            if (_caches[i].Target.TryGetTarget(out var target)) {
-                                _caches[count++] = _caches[i];
+                    for (var i = 0; i < caches.Count; i++) {
+                        if (caches[i] != null) {
+                            if (caches[i].Target.TryGetTarget(out var target)) {
+                                caches[count++] = caches[i];
                             } else {
-                                _caches[i] = null;
+                                caches[i] = null;
                             }
                         }
                     }
 
-                    _caches.RemoveRange(count, _caches.Count - count);
+                    caches.RemoveRange(count, caches.Count - count);
 
-                    return _caches;
+                    return caches;
                 }
             }
         }
@@ -70,9 +68,9 @@ namespace Sigobase.Utils {
         }
 
         public static TestInfo CreateInfo(ISigo t) {
-            lock (_caches) {
+            lock (caches) {
                 var info = new TestInfo(t);
-                Caches.Add(info);
+                caches.Add(info);
                 return info;
             }
         }
