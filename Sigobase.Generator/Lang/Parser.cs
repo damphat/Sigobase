@@ -48,8 +48,8 @@ namespace Sigobase.Generator.Lang {
                     var value = ParseOr();
                     ret.Add(key, value, optional);
 
-                    // skip 1 comma if it exists
-                    if (t.Kind == Kind.Comma) {
+                    // skip 1 comma or semicolon if it exists
+                    if (t.Kind == Kind.Comma | t.Kind == Kind.SemiColon) {
                         Next();
                     }
 
