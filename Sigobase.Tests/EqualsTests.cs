@@ -24,10 +24,11 @@ namespace Sigobase.Tests {
             diffs.Add(Sigo.Create(0, "x", 2));
             diffs.Add(Sigo.Create(0, "y", 1));
             diffs.Add(Sigo.Create(0, "y", 2));
-            diffs.Add(Sigo.Create(1, "x", 1));
-            diffs.Add(Sigo.Create(1, "x", 2));
-            diffs.Add(Sigo.Create(1, "y", 1));
-            diffs.Add(Sigo.Create(1, "y", 2));
+
+            diffs.Add(Sigo.Create(3, "x", 1));
+            diffs.Add(Sigo.Create(3, "x", 2));
+            diffs.Add(Sigo.Create(3, "y", 1));
+            diffs.Add(Sigo.Create(3, "y", 2));
 
             foreach (var a in diffs) {
                 foreach (var b in diffs) {
@@ -39,14 +40,14 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Leafs_compare_data() {
+        public void Leafs_compare_theirData() {
             Assert.Equal(Sigo.From(10000), Sigo.From(10000));
             Assert.Equal(Sigo.From(true), Sigo.From(true));
             Assert.Equal(Sigo.From("abc"), Sigo.From("abc"));
         }
 
         [Fact]
-        public void Trees_compare_protonBits() {
+        public void Trees_compare_theirProton() {
             var a = Sigo.Create(3, "k", "v");
             var b = Sigo.Create(0, "k", "v");
 
@@ -54,7 +55,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Trees_compare_childEquality() {
+        public void Trees_compare_theirChildren() {
             var a = Sigo.Create(0, "k", "v+");
             var b = Sigo.Create(0, "k", "v+");
             var c = Sigo.Create(0, "k", "v-");
@@ -64,7 +65,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Trees_doNotCompare_neutronBits() {
+        public void Trees_dontCompare_theirNeutron() {
             var a = Sigo.Create(3, "k", "v");
             var b = Sigo.Create(3, "k", "v").Freeze();
             Assert.NotEqual(a.Flags, b.Flags);
@@ -73,7 +74,7 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void Trees_doNotCompare_childOder() {
+        public void Trees_dontCompare_theirChildOder() {
             var a = Sigo.Create(3, "k1", "v1", "k2", "v2");
             var b = Sigo.Create(3, "k2", "v2", "k1", "v1");
             Assert.NotEqual(a.Keys.First(), b.Keys.First());
@@ -83,12 +84,12 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Trees_compare_deeply() {
-            var a = Sigo.Create(0, "a/b/c/d", "v+");
-            var b = Sigo.Create(0, "a/b/c/d", "v+");
-            var c = Sigo.Create(0, "a/b/c/d", "v-");
+            var a1 = Sigo.Create(0, "a/b/c/d", "v+");
+            var a2 = Sigo.Create(0, "a/b/c/d", "v+");
+            var b1 = Sigo.Create(0, "a/b/c/d", "v-");
 
-            Assert.Equal(a, b);
-            Assert.NotEqual(b, c);
+            Assert.Equal(a1, a2);
+            Assert.NotEqual(a1, b1);
         }
     }
 }
