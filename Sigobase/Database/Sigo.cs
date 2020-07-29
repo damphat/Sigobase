@@ -41,7 +41,7 @@ namespace Sigobase.Database {
         }
 
         public static ISigo Set(this ISigo sigo, string path, object value) {
-            return ImplSet.Set(sigo, path, Sigo.From(value));
+            return ImplSet.Set(sigo, path, From(value));
         }
 
         public static ISigo Create(int lmr, params object[] pvs) {
@@ -58,6 +58,10 @@ namespace Sigobase.Database {
 
         public static bool IsTree(this ISigo sigo) {
             return Bits.IsTree(sigo.Flags);
+        }
+
+        public static string ToString(this ISigo sigo, int indent) {
+            return ImplToString.ToString(sigo, indent);
         }
     }
 }

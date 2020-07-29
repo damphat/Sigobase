@@ -103,16 +103,7 @@ namespace Sigobase.Database {
         }
 
         public override string ToString() {
-            var sb = new StringBuilder();
-            sb.Append('{');
-            sb.Append(Bits.Proton(Flags));
-            foreach (var e in this) {
-                sb.Append(',');
-                sb.Append(e.Key).Append(':').Append(e.Value);
-            }
-
-            sb.Append('}');
-            return sb.ToString();
+            return this.ToString(0);
         }
 
         public ISigo Freeze() {

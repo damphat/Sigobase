@@ -27,7 +27,7 @@ namespace Sigobase.Database {
         public object Data { get; }
 
         public override string ToString() {
-            return (Data ?? "null").ToString();
+            return this.ToString(0);
         }
 
         public ISigo Freeze() {
