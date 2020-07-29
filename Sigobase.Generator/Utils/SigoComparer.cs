@@ -11,11 +11,11 @@ namespace Sigobase.Generator.Utils {
             typeof(string)
         };
 
-        private static int Compare(Type tx, Type ty) {
+        private static int CompareType(Type tx, Type ty) {
             return Array.IndexOf(types, tx) - Array.IndexOf(types, ty);
         }
 
-        private static int Compare(object x, object y) {
+        private static int CompareObject(object x, object y) {
             if (ReferenceEquals(x, y)) return 0;
             if (y == null) return 1; // everything > null
 
@@ -23,13 +23,14 @@ namespace Sigobase.Generator.Utils {
             var ty = y.GetType();
 
             if (tx == ty) return Comparer<object>.Default.Compare(x, y);
-            return Compare(tx, ty);
+            return CompareType(tx, ty);
 
         }
+
         public override int Compare(ISigo x, ISigo y) {
             if (y.IsLeaf()) {
                 if (x.IsLeaf()) {
-                    return Compare(x.Data, y.Data);
+                    return CompareObject(x.Data, y.Data);
                 } else {
                     return -1;
                 }
@@ -42,10 +43,10 @@ namespace Sigobase.Generator.Utils {
                         return delta;
                     }
 
-                    using var xe = x.GetEnumerator();
-                    using var ye = y.GetEnumerator();
+                    using IEnumerator<KeyValuePair<string, ISigo>> xe = x.GetEnumerator();
+                    using IEnumerator<KeyValuePair<string, ISigo>> ye = y.GetEnumerator();
                     while (xe.MoveNext() && ye.MoveNext()) {
-                        delta = Comparer<string>.Default.Compare(xe.Current.Key, ye.Current.Key);
+                        delta = string.CompareOrdinal(xe.Current.Key, ye.Current.Key);
                         if (delta != 0) return delta;
                         delta = Compare(xe.Current.Value, ye.Current.Value);
                         if (delta != 0) return delta;
