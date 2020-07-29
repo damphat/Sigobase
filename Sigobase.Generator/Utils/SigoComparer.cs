@@ -1,12 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Utils {
+    // Fixed Comparer<object>.Default.Compare(x.Data = "2", y.Data = 1);
     class SigoComparer : Comparer<ISigo> {
+        private static readonly Type[] types = new Type[] {
+            typeof(bool), 
+            typeof(double), 
+            typeof(string)
+        };
+
+        private static int Compare(Type tx, Type ty) {
+            return Array.IndexOf(types, tx) - Array.IndexOf(types, ty);
+        }
+
+        private static int Compare(object x, object y) {
+            if (ReferenceEquals(x, y)) return 0;
+            if (y == null) return 1; // everything > null
+
+            var tx = x.GetType();
+            var ty = y.GetType();
+
+            if (tx == ty) return Comparer<object>.Default.Compare(x, y);
+            return Compare(tx, ty);
+
+        }
         public override int Compare(ISigo x, ISigo y) {
             if (y.IsLeaf()) {
                 if (x.IsLeaf()) {
-                    return Comparer<object>.Default.Compare(x.Data, y.Data);
+                    return Compare(x.Data, y.Data);
                 } else {
                     return -1;
                 }
