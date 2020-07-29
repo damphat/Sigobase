@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Sigobase.Database;
 using Sigobase.Generator.Lang;
+using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator {
     class Program {
@@ -22,8 +24,10 @@ namespace Sigobase.Generator {
                     Console.WriteLine($"About {schema.Count()} items in {schema}");
                     Console.WriteLine("--------------------");
                     var count = 0;
-                    foreach (var value in schema.Values(filter: true)) {
-                        Console.WriteLine(value.ToString(2));
+                    var values = schema.Values(true).ToList();
+                    values.Sort(new SigoComparer());
+                    foreach (var value in values) {
+                        Console.WriteLine(value.ToString(0));
                         count++;
                     }
 

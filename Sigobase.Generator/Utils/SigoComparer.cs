@@ -1,40 +1,36 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Utils {
-    internal class SigoComparer : EqualityComparer<ISigo> {
-        public override bool Equals(ISigo x, ISigo y) {
-            Debug.Assert(x != null, nameof(x) + " != null");
-            Debug.Assert(y != null, nameof(y) + " != null");
-            if (ReferenceEquals(x, y)) {
-                return true;
-            }
+    class SigoComparer : Comparer<ISigo> {
+        public override int Compare(ISigo x, ISigo y) {
+            if (y.IsLeaf()) {
+                if (x.IsLeaf()) {
+                    return Comparer<object>.Default.Compare(x.Data, y.Data);
+                } else {
+                    return -1;
+                }
+            } else {
+                if (x.IsLeaf()) {
+                    return 1;
+                } else {
+                    var delta = x.Flags - y.Flags;
+                    if (delta != 0) {
+                        return delta;
+                    }
 
-            if (x.Flags != y.Flags) {
-                return false;
-            }
+                    using var xe = x.GetEnumerator();
+                    using var ye = y.GetEnumerator();
+                    while (xe.MoveNext() && ye.MoveNext()) {
+                        delta = Comparer<string>.Default.Compare(xe.Current.Key, ye.Current.Key);
+                        if (delta != 0) return delta;
+                        delta = Compare(xe.Current.Value, ye.Current.Value);
+                        if (delta != 0) return delta;
+                    }
 
-            foreach (var (k, v) in x) {
-                if (!Equals(v, y.Get1(k))) {
-                    return false;
+                    return 0;
                 }
             }
-
-            return true;
-        }
-
-        public override int GetHashCode(ISigo obj) {
-            if (obj.IsLeaf()) {
-                return obj.Data.GetHashCode();
-            }
-
-            var hash = obj.Flags;
-            foreach (var (k, v) in obj) {
-                hash = unchecked(hash + k.GetHashCode() * 11 + GetHashCode(v));
-            }
-
-            return hash;
         }
     }
 }
