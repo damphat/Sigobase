@@ -3,6 +3,8 @@ using System.Text;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Lang {
+    // TODO lexer.Reset(src);
+    // TODO Token Read(Token reused);
     internal class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;
@@ -11,6 +13,7 @@ namespace Sigobase.Generator.Lang {
         private char c;
         private char quote;
         private StringBuilder sb = new StringBuilder();
+        private int separator;
 
         public Lexer(string src) {
             this.src = src;
@@ -25,14 +28,13 @@ namespace Sigobase.Generator.Lang {
         }
 
         public Token Read() {
-            var br = false;
-            var sp = false;
+            separator = 0;
             while (true) {
                 if (c == '\r' || c == '\n') {
-                    br = true;
+                    separator |= 2;
                     Next();
                 } else if (c == ' ' || c == '\t') {
-                    sp = true;
+                    separator |= 1;
                     Next();
                 } else {
                     break;
@@ -70,11 +72,12 @@ namespace Sigobase.Generator.Lang {
         }
 
         private Token CreateToken(Kind kind) {
-            return new Token(kind, src, start, end);
+
+            return new Token(kind, src, start, end, separator);
         }
 
         private Token CreateToken(Kind kind, object value) {
-            return new Token(kind, src, start, end, value);
+            return new Token(kind, src, start, end, separator, value);
         }
 
         private Token IdentifierToken() {
@@ -91,7 +94,12 @@ namespace Sigobase.Generator.Lang {
             return CreateToken(kind);
         }
 
-        // TODO fraction & exponent
+        // TODO parse fraction & exponent
+        // TODO parse sign, +1 -1
+        // TODO parse -Infinity, NaN
+        // TODO parse -1E1000 => -Infinity
+        // TODO parse 1_000
+        // TODO parse 0xffff
         private Token NumberToken() {
             Next();
             while (c >= '0' && c <= '9') {

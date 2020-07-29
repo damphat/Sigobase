@@ -2,11 +2,12 @@
     internal class Token {
         private string raw;
 
-        public Token(Kind kind, string src, int start, int end, object value = null) {
+        public Token(Kind kind, string src, int start, int end, int separator, object value = null) {
             Kind = kind;
             Src = src;
             Start = start;
             End = end;
+            Separator = separator;
             Value = value;
         }
 
@@ -16,6 +17,7 @@
 
         public Kind Kind { get; }
 
+        public int Separator { get; }
         public string Raw => raw ??= Src.Substring(Start, End - Start);
 
         public object Value { get; }
