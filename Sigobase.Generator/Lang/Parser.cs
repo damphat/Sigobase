@@ -6,16 +6,17 @@ using Sigobase.Generator.Schemas;
 
 namespace Sigobase.Generator.Lang {
     class Parser {
-        private Lexer lexer;
-        private Token t = null;
+        private PeekableLexer lexer;
+        private Token t;
 
         private void Next() {
-            t = lexer.Read(t);
+            lexer.Move(1);
+            t = lexer.Peek(0);
         }
 
-        public Parser(Lexer lexer) {
-            this.lexer = lexer;
-            t = lexer.Read(t);
+        public Parser(string src) {
+            this.lexer = new PeekableLexer(src, 0, 1);
+            t = lexer.Peek(0);
         }
 
         public Schema ParseObject() {
@@ -105,7 +106,8 @@ namespace Sigobase.Generator.Lang {
                     throw new Exception($"'{t.Raw}' is not supported");
                 default:
                     var key = t.Raw;
-                    if (cache.TryGetValue(t.Raw, out var schema)) {
+                    Next();
+                    if (cache.TryGetValue(key, out var schema)) {
                         return schema;
                     } else {
                         throw new Exception($"schema '{key}' is not found");
@@ -147,6 +149,27 @@ namespace Sigobase.Generator.Lang {
         }
 
         public Schema Parse() {
+            while (true) {
+                if (t.Kind == Kind.Identifier && lexer.Peek(1).Kind == Kind.Eq) {
+                    var key = t.Raw;
+                    Next();
+                    Next();
+                    var value = ParseOr();
+                    cache[key] = value;
+
+                    if (t.Kind == Kind.SemiColon) {
+                        Next();
+                    }
+
+                } else {
+                    break;
+                }
+            }
+
+            if (t.Kind == Kind.Eof) {
+                return new OrSchema();
+            }
+
             var ret = ParseOr();
             if (t.Kind != Kind.Eof) {
                 throw new Exception("eof expected");
