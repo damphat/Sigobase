@@ -65,7 +65,7 @@ namespace Sigobase.Generator.Lang {
             if (t.Kind == Kind.Number) {
                 flags = t.Raw;
                 Next();
-                if (t.Kind == Kind.Comma) {
+                if (t.Kind == Kind.Comma | t.Kind == Kind.SemiColon) {
                     Next();
                 }
             }
