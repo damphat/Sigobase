@@ -9,6 +9,24 @@ namespace Sigobase.Implements {
             return sb.Append(' ', indentLevel * indent);
         }
 
+        private static StringBuilder WriteColon(StringBuilder sb, int indent) {
+            sb.Append(':');
+            if (indent > 0) {
+                sb.Append(' ');
+            }
+
+            return sb;
+        }
+
+        private static StringBuilder WriteComma(StringBuilder sb, int indent) {
+            if (indent == 0) {
+                sb.Append(',');
+            }
+
+            return sb;
+        }
+
+
         private static StringBuilder WriteString(StringBuilder sb, string s) {
             sb.Append('"');
             foreach (var c in s)
@@ -108,12 +126,12 @@ namespace Sigobase.Implements {
             sb.Append(sigo.Flags & 7);
 
             foreach (var e in sigo) {
-                sb.Append(',');
+                WriteComma(sb, indent);
                 if (indent > 0) WriteLineIndent(sb, indent, indentLevel + 1);
 
                 WriteKey(sb, e.Key);
 
-                sb.Append(':');
+                WriteColon(sb, indent);
                 WriteSigo(sb, e.Value, indent, indentLevel + 1);
             }
 
@@ -131,12 +149,13 @@ namespace Sigobase.Implements {
 
             foreach (DictionaryEntry e in dict) {
                 if (first) first = false;
-                else sb.Append(',');
+                else WriteComma(sb, indent);
                 if (indent > 0) WriteLineIndent(sb, indent, indentLevel + 1);
 
                 WriteKey(sb, e.Key.ToString());
 
-                sb.Append(':');
+                WriteColon(sb, indent);
+
                 WriteAny(sb, e.Value, indent, indentLevel + 1);
             }
 
@@ -154,7 +173,7 @@ namespace Sigobase.Implements {
             var first = true;
             foreach (var e in list) {
                 if (first) first = false;
-                else sb.Append(',');
+                else WriteComma(sb, indent);
 
                 if (indent > 0)
                     WriteLineIndent(sb, indent, indentLevel + 1);
