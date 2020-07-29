@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Sigobase.Tests.MergeTests {
     public class MergeSpecTests {
-        [Fact]
+        [Fact(Skip = "Not Implemented")]
         public void Try_to_return_part_of_a() {
             var a = Sigo.Create(7,
                 "x/name", "Phat"
