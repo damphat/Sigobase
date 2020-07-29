@@ -16,6 +16,10 @@ namespace Sigobase.Generator.Utils {
                 return false;
             }
 
+            if (x.IsLeaf()) {
+                return object.Equals(x.Data, y.Data);
+            }
+
             foreach (var (k, v) in x) {
                 if (!Equals(v, y.Get1(k))) {
                     return false;
