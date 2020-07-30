@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Utils {
@@ -17,7 +16,7 @@ namespace Sigobase.Generator.Utils {
             }
 
             if (x.IsLeaf()) {
-                return object.Equals(x.Data, y.Data);
+                return Equals(x.Data, y.Data);
             }
 
             foreach (var (k, v) in x) {
