@@ -10,7 +10,9 @@ namespace Sigobase.Generator {
             while (true) {
                 try {
                     var cmd = Console.ReadLine();
-                    if (string.IsNullOrEmpty(cmd)) continue;
+                    if (string.IsNullOrEmpty(cmd)) {
+                        continue;
+                    }
 
                     switch (cmd[0]) {
                         case 'm':
@@ -47,30 +49,43 @@ all = user | string | number | {}
             while (true) {
                 Console.Write('>');
                 var src = Console.ReadLine();
-                if (string.IsNullOrEmpty(src)) continue;
-                if (src == "?" || src == "help") {
-                    foreach (var e in Schema.SchemaDict) {
-                        Console.WriteLine($"{e.Key} = {e.Value}");
-                    }
+                if (string.IsNullOrEmpty(src)) {
                     continue;
                 }
 
-                var parser = new Parser(src);
+                switch (src) {
+                    case "?":
+                    case "help": {
+                        foreach (var e in Schema.SchemaDict) {
+                            Console.WriteLine($"{e.Key} = {e.Value}");
+                        }
 
-                try {
-                    var schema = parser.Parse();
-                    Console.WriteLine($"About {schema.Count()} items in {schema}");
-                    Console.WriteLine("--------------------");
-                    var count = 0;
-                    var values = schema.Values(Options.UniqueSorted);
-                    foreach (var value in values) {
-                        Console.WriteLine(value.ToString(0));
-                        count++;
+                        continue;
                     }
+                    case "exit":
+                    case "quit":
+                        return;
+                    default: {
+                        var parser = new Parser(src);
 
-                    Console.WriteLine($"{count}/{schema.Count()} items listed");
-                } catch (Exception e) {
-                    Console.Error.WriteLine(e);
+                        try {
+                            var schema = parser.Parse();
+                            Console.WriteLine($"About {schema.Count()} items in {schema}");
+                            Console.WriteLine("--------------------");
+                            var count = 0;
+                            var values = schema.Values(Options.UniqueSorted);
+                            foreach (var value in values) {
+                                Console.WriteLine(value.ToString(0));
+                                count++;
+                            }
+
+                            Console.WriteLine($"{count}/{schema.Count()} items listed");
+                        } catch (Exception e) {
+                            Console.Error.WriteLine(e);
+                        }
+
+                        break;
+                    }
                 }
             }
         }
