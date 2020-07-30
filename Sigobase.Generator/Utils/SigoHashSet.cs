@@ -3,9 +3,8 @@ using Sigobase.Database;
 
 namespace Sigobase.Generator.Utils {
     internal class SigoHashSet : HashSet<ISigo> {
-        private static readonly SigoEqualityComparer comparer = new SigoEqualityComparer();
-        public SigoHashSet(IEnumerable<ISigo> collection) : base(collection, comparer) { }
-        public SigoHashSet() : base(comparer) { }
+        public SigoHashSet(IEnumerable<ISigo> collection) : base(collection) { }
+        public SigoHashSet() { }
     }
 
     internal class SigoSortedSet : SortedSet<ISigo> {
