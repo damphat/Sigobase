@@ -17,7 +17,7 @@
         public int End { get; private set; }
         public int Separator { get; private set; }
 
-        public string Raw => raw ??= Src.Substring(Start, End - Start);
+        public string Raw => raw = raw ?? Src.Substring(Start, End - Start);
 
         public object Value { get; private set; }
 

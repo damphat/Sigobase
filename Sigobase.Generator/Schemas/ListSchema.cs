@@ -5,13 +5,12 @@ using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Schemas {
     internal class ListSchema : Schema {
-
         public IReadOnlyList<Schema> Items { get; }
 
         public ListSchema(IReadOnlyList<Schema> items) {
             Items = items;
         }
-      
+
         private IEnumerable<ISigo> Generate(Options filter) {
             return Items.SelectMany(schema => schema.Values(filter));
         }
@@ -36,10 +35,12 @@ namespace Sigobase.Generator.Schemas {
             }
         }
 
-        public override int Count() => Items.Select(x => x.Count()).Sum();
+        public override int Count() {
+            return Items.Select(x => x.Count()).Sum();
+        }
 
         public override string ToString() {
-            return string.Join('|', Items);
+            return string.Join("|", Items);
         }
     }
 }
