@@ -3,8 +3,6 @@ using System.Text;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Lang {
-    // TODO lexer.Reset(src);
-    // TODO Token Read(Token reused);
     internal class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;
@@ -15,7 +13,7 @@ namespace Sigobase.Generator.Lang {
 
         private char c;
         private char quote;
-        private StringBuilder sb = new StringBuilder();
+        private readonly StringBuilder sb = new StringBuilder();
 
         public Lexer(string src) {
             this.src = src;
@@ -79,7 +77,7 @@ namespace Sigobase.Generator.Lang {
         }
 
         private Token CreateToken(Kind kind, object value = null) {
-            if(token == null) {
+            if (token == null) {
                 return new Token(kind, src, start, end, separator, value);
             } else {
                 token.Reset(kind, src, start, end, separator, value);
@@ -186,7 +184,7 @@ namespace Sigobase.Generator.Lang {
 
                     break;
                 default: // /c
-                    sb.Append(c); // warning
+                    sb.Append(c); // warning unknown escape
                     Next();
                     break;
             } // switch (the letter after \)
