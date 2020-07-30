@@ -19,7 +19,7 @@ namespace Sigobase.Generator.Lang {
             t = lexer.Peek(0);
         }
 
-        public Schema ParseObject() {
+        private Schema ParseObject() {
             Next();
             var ret = new ObjectSchema {
                 Flags = ParseFlags()
