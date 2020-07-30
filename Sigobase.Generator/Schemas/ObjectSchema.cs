@@ -118,7 +118,10 @@ namespace Sigobase.Generator.Schemas {
                 }
 
                 sb.Append(field.Key);
-                if (field.Value.optional) sb.Append('?');
+                if (field.Value.optional) {
+                    sb.Append('?');
+                }
+
                 sb.Append(':');
                 sb.Append(field.Value.schema);
             }

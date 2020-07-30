@@ -16,7 +16,7 @@ namespace Sigobase.Tests.MergeTests {
             ).Freeze();
 
             var r = ImplMergeSpec.Merge(a, b);
-            
+
             // r equal b...
             Assert.Equal(r, b);
 

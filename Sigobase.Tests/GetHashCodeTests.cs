@@ -36,8 +36,7 @@ namespace Sigobase.Tests {
             Assert.Equal(
                 ImplGetHashCode.GetHashCode(Sigo.Create(0, "x", 1)),
                 ImplGetHashCode.GetHashCode(Sigo.Create(0, "x", 1).Freeze())
-                );
-
+            );
         }
 
         [Fact]

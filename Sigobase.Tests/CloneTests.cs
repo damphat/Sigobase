@@ -16,12 +16,12 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void NonFrozen_return_new_obj() {
-            var user = Sigo.Create(3, 
+            var user = Sigo.Create(3,
                 "name", Sigo.Create(3,
                     "first", "Phat",
                     "last", "Dam"),
                 "frozen", Sigo.Create(0, "k", "v").Freeze()
-                );
+            );
 
             Assert.False(user.IsFrozen());
             Assert.False(user.Get("name").IsFrozen());

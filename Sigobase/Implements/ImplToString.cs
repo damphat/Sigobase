@@ -26,7 +26,6 @@ namespace Sigobase.Implements {
             return sb;
         }
 
-
         private static StringBuilder WriteString(StringBuilder sb, string s) {
             sb.Append('"');
             foreach (var c in s)

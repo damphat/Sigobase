@@ -64,11 +64,16 @@ namespace Sigobase.Generator.Lang {
                 if (i < 0) {
                     sb.Append("null");
                 } else {
-                    if (i == cursor) sb.Append('(');
+                    if (i == cursor) {
+                        sb.Append('(');
+                    }
+
                     sb.Append(i);
                     sb.Append(':');
                     sb.Append(buffer[i % buffer.Length].Raw);
-                    if (i == cursor) sb.Append(')');
+                    if (i == cursor) {
+                        sb.Append(')');
+                    }
                 }
 
                 sb.Append(' ');

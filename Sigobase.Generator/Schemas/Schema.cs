@@ -27,7 +27,10 @@ namespace Sigobase.Generator.Schemas {
 
         #endregion
 
-        public IEnumerable<ISigo> Values() => Values(DefaultOptions);
+        public IEnumerable<ISigo> Values() {
+            return Values(DefaultOptions);
+        }
+
         public abstract IEnumerable<ISigo> Values(Options options);
         public abstract int Count();
     }
