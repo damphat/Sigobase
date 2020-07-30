@@ -1,12 +1,11 @@
-﻿using System.Text;
-using Sigobase.Utils;
+﻿using Sigobase.Utils;
 
 namespace Sigobase.Database {
     internal class SigoTree : ReadOnlyDictionary, ISigo {
         public SigoTree(int flags, Dict dict) : base(dict) {
             Flags = flags;
 #if TESTMODE
-            Info = Utils.TestInfo.CreateInfo(this);
+            Info = TestInfo.CreateInfo(this);
 #endif
         }
 
@@ -122,6 +121,14 @@ namespace Sigobase.Database {
 
         public bool Equals(ISigo other) {
             return Sigo.Equals(this, other);
+        }
+
+        public override bool Equals(object obj) {
+            return obj is ISigo other && Sigo.Equals(this, other);
+        }
+
+        public override int GetHashCode() {
+            return Sigo.GetHashCode(this);
         }
 
 #if TESTMODE

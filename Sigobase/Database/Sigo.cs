@@ -20,8 +20,12 @@ namespace Sigobase.Database {
             return ImplSame.Same(sigo, other);
         }
 
-        public static bool Equals(this ISigo sigo, ISigo other) {
+        public static bool Equals(ISigo sigo, ISigo other) {
             return ImplEquals.Equals(sigo, other);
+        }
+
+        public static int GetHashCode(ISigo sigo) {
+            return ImplGetHashCode.GetHashCode(sigo);
         }
 
         public static ISigo Merge(this ISigo sigo, ISigo other) {

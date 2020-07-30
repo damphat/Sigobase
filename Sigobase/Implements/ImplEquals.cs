@@ -13,8 +13,8 @@ namespace Sigobase.Implements {
                 return false;
             }
 
-            return Bits.IsLeaf(a.Flags) 
-                ? Equals(a.Data, b.Data) 
+            return Bits.IsLeaf(a.Flags)
+                ? Equals(a.Data, b.Data)
                 : a.All(e => Equals(e.Value, b.Get1(e.Key)));
         }
     }
