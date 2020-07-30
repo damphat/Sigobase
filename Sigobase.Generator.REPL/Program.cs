@@ -3,7 +3,7 @@ using Sigobase.Database;
 using Sigobase.Generator.Lang;
 using Sigobase.Generator.Schemas;
 
-namespace Sigobase.Generator {
+namespace Sigobase.Generator.REPL {
     internal class Program {
         private static void PeekableLexerTest() {
             var lex = new PeekableLexer("0 1 2 3 4 5 6", -1, 2);
@@ -32,14 +32,12 @@ namespace Sigobase.Generator {
 
         private static void Main() {
             var example = @"
-number = 1 | 2; 
-string = 'an' | 'bao'; 
-user = {
-  name: string,
-  age?:number
-}
-all = user | string | number | {}
-";
+                age  = 20 | 40; 
+                name = 'An' | 'Bao'; 
+                user = {name: name, age?: age}
+                user = {name, age?}
+                all  = user | name | age | {}
+                ";
 
             Console.WriteLine(@"schema examples:");
             Console.WriteLine(example);

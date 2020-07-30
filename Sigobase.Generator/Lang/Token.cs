@@ -1,5 +1,5 @@
 ﻿namespace Sigobase.Generator.Lang {
-    internal class Token {
+    public class Token {
         private string raw;
 
         public Token(Kind kind, string src, int start, int end, int separator, object value = null) {

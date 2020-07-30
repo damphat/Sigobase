@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Sigobase.Generator.Lang {
-    internal class PeekableLexer {
+    public class PeekableLexer {
         private readonly Lexer lexer;
         private readonly Token[] buffer;
         private readonly int min;

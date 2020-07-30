@@ -1,5 +1,5 @@
 ﻿namespace Sigobase.Generator.Lang {
-    internal enum Kind {
+    public enum Kind {
         Number,
         String,
         Identifier,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Schemas {
-    internal abstract class Schema {
+    public abstract class Schema {
         #region static
 
         private const Options DefaultOptions = Options.UniqueSorted;

@@ -3,7 +3,7 @@ using System.Text;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Lang {
-    internal class Lexer {
+    public class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;
         private int start;

@@ -5,7 +5,7 @@ using Sigobase.Database;
 using Sigobase.Generator.Schemas;
 
 namespace Sigobase.Generator.Lang {
-    internal class Parser {
+    public class Parser {
         private readonly PeekableLexer lexer;
         private Token t;
 
@@ -15,7 +15,7 @@ namespace Sigobase.Generator.Lang {
         }
 
         public Parser(string src) {
-            lexer = new PeekableLexer(src, 0, 1);
+            lexer = new PeekableLexer(src, 0, 1); // Peek(0), Peek(1)
             t = lexer.Peek(0);
         }
 
@@ -42,12 +42,15 @@ namespace Sigobase.Generator.Lang {
 
                     if (t.Kind == Kind.Colon) {
                         Next();
-                    } else {
-                        throw new Exception("colon expected");
-                    }
 
-                    var value = ParseOr();
-                    ret.Add(key, value, optional);
+                        var value = ParseOr();
+                        ret.Add(key, value, optional);
+
+                        
+                    } else {
+                        ret.Add(key, new ReferenceSchema(key), optional);
+
+                    }
 
                     // skip 1 comma or semicolon if it exists
                     if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
