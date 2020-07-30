@@ -6,10 +6,4 @@ namespace Sigobase.Generator.Utils {
         public SigoHashSet(IEnumerable<ISigo> collection) : base(collection) { }
         public SigoHashSet() { }
     }
-
-    internal class SigoSortedSet : SortedSet<ISigo> {
-        private static readonly SigoComparer comparer = new SigoComparer();
-        public SigoSortedSet(IEnumerable<ISigo> collection) : base(collection, comparer) { }
-        public SigoSortedSet() : base(comparer) { }
-    }
 }
