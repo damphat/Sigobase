@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Sigobase.Generator.Lang {
-    class PeekableLexer {
-        private Lexer lexer;
-        private Token[] buffer;
-        private int min;
-        private int max;
+    internal class PeekableLexer {
+        private readonly Lexer lexer;
+        private readonly Token[] buffer;
+        private readonly int min;
+        private readonly int max;
         private int cursor;
         private int readCount;
 
         public PeekableLexer(string src, int min, int max) {
-            this.lexer = new Lexer(src);
+            lexer = new Lexer(src);
             this.min = min;
             this.max = max;
             buffer = new Token[max - min + 1];
@@ -28,6 +27,7 @@ namespace Sigobase.Generator.Lang {
             if (delta < min || delta > max) {
                 throw new ArgumentOutOfRangeException(nameof(delta));
             }
+
             var c = cursor + delta;
             if (c < 0) {
                 throw new ArgumentOutOfRangeException(nameof(delta), "cursor + delta < 0");
@@ -55,13 +55,12 @@ namespace Sigobase.Generator.Lang {
             }
 
             cursor = c;
-
         }
 
         public override string ToString() {
             var sb = new StringBuilder();
             sb.Append('[');
-            for (int i = readCount - buffer.Length; i < readCount; i++) {
+            for (var i = readCount - buffer.Length; i < readCount; i++) {
                 if (i < 0) {
                     sb.Append("null");
                 } else {
@@ -71,17 +70,17 @@ namespace Sigobase.Generator.Lang {
                     sb.Append(buffer[i % buffer.Length].Raw);
                     if (i == cursor) sb.Append(')');
                 }
-                sb.Append(' ');
 
+                sb.Append(' ');
             }
+
             sb.Append(']');
 
             if (cursor >= readCount) {
                 sb.Append('(').Append(cursor).Append(')');
             }
-            
-            return sb.ToString();
 
+            return sb.ToString();
         }
     }
 }
