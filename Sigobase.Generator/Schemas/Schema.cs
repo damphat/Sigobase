@@ -1,33 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sigobase.Database;
-using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Schemas {
-    abstract class Schema {
-        private SigoHashSet caches;
+    internal abstract class Schema {
+        #region static
 
-        public IEnumerable<ISigo> Values(bool filter) {
-            if (filter == false) {
-                foreach (var value in Values()) {
-                    yield return value;
-                }
+        private const Options DefaultOptions = Options.UniqueSorted;
+        public static readonly Dictionary<string, Schema> SchemaDict = new Dictionary<string, Schema>();
+
+        public static void SetType(string name, Schema value) {
+            SchemaDict[name] = value;
+        }
+
+        public static Schema GetType(string name) {
+            if (SchemaDict.TryGetValue(name, out var value)) {
+                return value;
             } else {
-                if (caches == null) {
-                    caches = new SigoHashSet();
+                if (SchemaDict.TryGetValue(name, out var schema)) {
+                    return schema;
                 } else {
-                    caches.Clear();
-                }
-
-                foreach (var value in Values()) {
-                    if (caches.Add(value)) {
-                        yield return value;
-                    }
+                    throw new Exception($"schema '{name}' is not found");
                 }
             }
         }
 
-        public abstract IEnumerable<ISigo> Values();
+        #endregion
 
+        public IEnumerable<ISigo> Values() => Values(DefaultOptions);
+        public abstract IEnumerable<ISigo> Values(Options options);
         public abstract int Count();
     }
 }

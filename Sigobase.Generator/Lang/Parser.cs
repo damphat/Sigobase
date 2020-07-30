@@ -5,8 +5,8 @@ using Sigobase.Database;
 using Sigobase.Generator.Schemas;
 
 namespace Sigobase.Generator.Lang {
-    class Parser {
-        private PeekableLexer lexer;
+    internal class Parser {
+        private readonly PeekableLexer lexer;
         private Token t;
 
         private void Next() {
@@ -15,13 +15,13 @@ namespace Sigobase.Generator.Lang {
         }
 
         public Parser(string src) {
-            this.lexer = new PeekableLexer(src, 0, 1);
+            lexer = new PeekableLexer(src, 0, 1);
             t = lexer.Peek(0);
         }
 
         public Schema ParseObject() {
             Next();
-            var ret = new ObjSchema {
+            var ret = new ObjectSchema {
                 Flags = ParseFlags()
             };
 
@@ -77,26 +77,24 @@ namespace Sigobase.Generator.Lang {
         private Schema ParseNumber() {
             var number = double.Parse(t.Raw);
             Next();
-            return new SingleValueSchema(number);
+            return new ValueSchema(number);
         }
 
         private Schema ParseString() {
             var str = t.Value;
             Next();
-            return new SingleValueSchema(str);
+            return new ValueSchema(str);
         }
-
-        private static Dictionary<string, Schema> cache = new Dictionary<string, Schema>();
 
         private Schema ParseIdentifier() {
             switch (t.Raw) {
                 case "true": {
-                    var ret = new SingleValueSchema(true);
+                    var ret = new ValueSchema(true);
                     Next();
                     return ret;
                 }
                 case "false": {
-                    var ret = new SingleValueSchema(false);
+                    var ret = new ValueSchema(false);
                     Next();
                     return ret;
                 }
@@ -107,11 +105,7 @@ namespace Sigobase.Generator.Lang {
                 default:
                     var key = t.Raw;
                     Next();
-                    if (cache.TryGetValue(key, out var schema)) {
-                        return schema;
-                    } else {
-                        throw new Exception($"schema '{key}' is not found");
-                    }
+                    return new ReferenceSchema(key);
             }
         }
 
@@ -134,16 +128,15 @@ namespace Sigobase.Generator.Lang {
             var item = ParseSingle();
             if (t.Kind != Kind.Or) return item;
 
-            var orSchema = new OrSchema();
-            orSchema.Add(item);
+            var items = new List<Schema> {item};
 
             // ('|' single)+
             while (true) {
                 Next(); // '|'
                 item = ParseSingle();
-                orSchema.Add(item);
+                items.Add(item);
                 if (t.Kind != Kind.Or) {
-                    return orSchema;
+                    return new ListSchema(items);
                 }
             }
         }
@@ -155,19 +148,18 @@ namespace Sigobase.Generator.Lang {
                     Next();
                     Next();
                     var value = ParseOr();
-                    cache[key] = value;
+                    Schema.SetType(key, value);
 
                     if (t.Kind == Kind.SemiColon) {
                         Next();
                     }
-
                 } else {
                     break;
                 }
             }
 
             if (t.Kind == Kind.Eof) {
-                return new OrSchema();
+                return new NothingSchema();
             }
 
             var ret = ParseOr();
