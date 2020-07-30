@@ -13,7 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator", "Sigobase.Generator\Sigobase.Generator.csproj", "{AAFD78D8-7019-4D5C-96C9-639057DCDCAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigobase.Generator.REPL", "Sigobase.Generator.REPL\Sigobase.Generator.REPL.csproj", "{EEB12960-D80B-4E95-9C4E-8CE4255143E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator.REPL", "Sigobase.Generator.REPL\Sigobase.Generator.REPL.csproj", "{EEB12960-D80B-4E95-9C4E-8CE4255143E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language", "Sigobase.Language\Sigobase.Language.csproj", "{E81B114E-B2A7-431C-9C17-56EE81DA9D0E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language.Tests", "Sigobase.Language.Tests\Sigobase.Language.Tests.csproj", "{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language.REPL", "Sigobase.Language.REPL\Sigobase.Language.REPL.csproj", "{037661A1-74FB-4CB3-BAB4-8C9D08C4DA4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +47,18 @@ Global
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E81B114E-B2A7-431C-9C17-56EE81DA9D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E81B114E-B2A7-431C-9C17-56EE81DA9D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E81B114E-B2A7-431C-9C17-56EE81DA9D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E81B114E-B2A7-431C-9C17-56EE81DA9D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{037661A1-74FB-4CB3-BAB4-8C9D08C4DA4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{037661A1-74FB-4CB3-BAB4-8C9D08C4DA4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{037661A1-74FB-4CB3-BAB4-8C9D08C4DA4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{037661A1-74FB-4CB3-BAB4-8C9D08C4DA4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
