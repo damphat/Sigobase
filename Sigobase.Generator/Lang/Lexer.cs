@@ -27,6 +27,45 @@ namespace Sigobase.Generator.Lang {
             c = ++end < src.Length ? src[end] : Eof;
         }
 
+        private char Peek(int i) {
+            i += end;
+            return i < src.Length ? src[i] : Eof;
+        }
+
+
+        private void ScanLineComment() {
+            Next();
+            Next();
+            while (c != '\r' && c != '\n' && c != Eof) {
+                Next();
+            }
+        }
+
+        private void ScanBlockComment() {
+            Next();
+            Next();
+
+            // search for */ or eof
+            while (true) {
+                switch (c) {
+                    case '*': {
+                        Next();
+                        if (c == '/') {
+                            Next();
+                            return; // OK
+                        } else {
+                            continue;   // reset
+                        }
+                    }
+                    case Eof:
+                        return; // unexpected eof
+                    default:
+                        Next();
+                        break;
+                }
+            }
+        }
+
         private void ScanSeparator() {
             separator = 0;
             while (true) {
@@ -36,6 +75,15 @@ namespace Sigobase.Generator.Lang {
                 } else if (c == ' ' || c == '\t') {
                     separator |= 1;
                     Next();
+                } else if (c == '/') {
+                    var c1 = Peek(1);
+                    if (c1 == '/') {
+                        ScanLineComment();
+                    } else if (c1 == '*') {
+                        ScanBlockComment();
+                    } else {
+                        return; // goto Kind.Div
+                    }
                 } else {
                     break;
                 }
@@ -60,11 +108,11 @@ namespace Sigobase.Generator.Lang {
                 case '"':
                 case '\'': return StringToken();
                 default:
-                    if (c >= '0' && c <= '9') {
+                    if (Chars.Digit(c)) {
                         return NumberToken();
                     }
 
-                    if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_') {
+                    if (Chars.IdentifierStart(c)) {
                         return IdentifierToken();
                     }
 
@@ -87,7 +135,7 @@ namespace Sigobase.Generator.Lang {
 
         private Token IdentifierToken() {
             Next();
-            while (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' || c >= '0' && c <= '9') {
+            while (Chars.IdentifierPart(c)) {
                 Next();
             }
 
@@ -107,7 +155,7 @@ namespace Sigobase.Generator.Lang {
         // TODO parse 0xffff
         private Token NumberToken() {
             Next();
-            while (c >= '0' && c <= '9') {
+            while (Chars.Digit(c)) {
                 Next();
             }
 
