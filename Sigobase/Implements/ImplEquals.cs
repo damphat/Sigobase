@@ -1,4 +1,5 @@
-﻿using Sigobase.Database;
+﻿using System.Linq;
+using Sigobase.Database;
 using Sigobase.Utils;
 
 namespace Sigobase.Implements {
@@ -12,17 +13,9 @@ namespace Sigobase.Implements {
                 return false;
             }
 
-            if (Bits.IsLeaf(a.Flags)) {
-                return Equals(a.Data, b.Data);
-            }
-
-            foreach (var k in a.Keys) {
-                if (Equals(a.Get1(k), b.Get1(k)) == false) {
-                    return false;
-                }
-            }
-
-            return true;
+            return Bits.IsLeaf(a.Flags) 
+                ? Equals(a.Data, b.Data) 
+                : a.All(e => Equals(e.Value, b.Get1(e.Key)));
         }
     }
 }

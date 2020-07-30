@@ -32,10 +32,26 @@ namespace Sigobase.Tests {
         }
 
         [Fact]
-        public void BeCarefulOf_arithmeticOverflow() {
-            var s1 = Sigo.Create(3, "k1", int.MaxValue, "k2", int.MaxValue);
-            var s2 = Sigo.Create(3, "k2", int.MaxValue, "k1", int.MaxValue);
-            Assert.Equal(ImplGetHashCode.GetHashCode(s1), ImplGetHashCode.GetHashCode(s2));
+        public void Ignore_frozen_bit() {
+            Assert.Equal(
+                ImplGetHashCode.GetHashCode(Sigo.Create(0, "x", 1)),
+                ImplGetHashCode.GetHashCode(Sigo.Create(0, "x", 1).Freeze())
+                );
+
+        }
+
+        [Fact]
+        public void Null_return_0() {
+            Assert.Equal(0, ImplGetHashCode.GetHashCode(null));
+        }
+
+        [Fact]
+        public void Never_throw_overflow_exception() {
+            var n = int.MaxValue / 100;
+            for (int i = 0; i < 1000; i++) {
+                var s = Sigo.Create(0, "x", n * i, "y", n);
+                ImplGetHashCode.GetHashCode(s);
+            }
         }
     }
 }
