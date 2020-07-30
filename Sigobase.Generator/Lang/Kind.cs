@@ -8,10 +8,10 @@
         Close,
         Colon,
         Comma,
-        Eof,
         Question,
-        Unknown,
         SemiColon,
-        Eq
+        Eq,
+        Unknown,
+        Eof
     }
 }
