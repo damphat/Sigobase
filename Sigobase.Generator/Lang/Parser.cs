@@ -50,7 +50,7 @@ namespace Sigobase.Generator.Lang {
                     ret.Add(key, value, optional);
 
                     // skip 1 comma or semicolon if it exists
-                    if (t.Kind == Kind.Comma | t.Kind == Kind.SemiColon) {
+                    if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
                         Next();
                     }
 
@@ -66,7 +66,7 @@ namespace Sigobase.Generator.Lang {
             if (t.Kind == Kind.Number) {
                 flags = t.Raw;
                 Next();
-                if (t.Kind == Kind.Comma | t.Kind == Kind.SemiColon) {
+                if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
                     Next();
                 }
             }
@@ -126,7 +126,9 @@ namespace Sigobase.Generator.Lang {
 
         private Schema ParseOr() {
             var item = ParseSingle();
-            if (t.Kind != Kind.Or) return item;
+            if (t.Kind != Kind.Or) {
+                return item;
+            }
 
             var items = new List<Schema> {item};
 
