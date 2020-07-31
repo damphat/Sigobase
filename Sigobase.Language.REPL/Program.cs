@@ -1,19 +1,20 @@
 ﻿using System;
 using Sigobase.Database;
 using Sigobase.Language.Lang;
+using Sigobase.Utils;
 
 namespace Sigobase.Language.REPL {
     internal class Program {
         private static void Main(string[] args) {
+            var writer = Writer.Pretty;
             while (true) {
                 Console.Write("sigo>");
                 var src = Console.ReadLine();
-                var parser = new Parser(src);
                 try {
-                    Console.WriteLine(parser.Parse().ToString(2));
+                    var sigo = new Parser(src).Parse();
+                    Console.WriteLine(sigo.ToString(writer));
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
-                    
                 }
             }
         }
