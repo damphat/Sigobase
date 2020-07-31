@@ -7,7 +7,7 @@ namespace Sigobase.Language.Lang {
         private readonly PeekableLexer lexer;
         private Token t;
         private ISigo global = Sigo.Create(3);
-        private List<string> keys = new List<string>();
+//        private List<string> keys = new List<string>();
 
         private void Next() {
             lexer.Move(1);
@@ -72,8 +72,7 @@ namespace Sigobase.Language.Lang {
             var key = ReadKey();
             if (key == null) return null;
 
-            keys.Clear();
-            keys.Add(key);
+            var keys = new List<string> {key};
             while (t.Kind == Kind.Div) {
                 Next();
                 key = ReadKey();
