@@ -6,6 +6,8 @@ namespace Sigobase.Language.Lang {
     public class Parser {
         private readonly PeekableLexer lexer;
         private Token t;
+        private ISigo global = Sigo.Create(3);
+        private List<string> keys = new List<string>();
 
         private void Next() {
             lexer.Move(1);
@@ -31,13 +33,21 @@ namespace Sigobase.Language.Lang {
         }
 
         private ISigo ParseIdentifier() {
+            if (lexer.Peek(1).Kind == Kind.Eq) {
+                return ParseAssignment();
+            }
+
             var raw = t.Raw;
             switch (raw) {
-                case "true": return Sigo.From(true);
-                case "false": return Sigo.From(false);
-                case "NaN": return Sigo.From(double.NaN);
-                case "Infinity": return Sigo.From(double.PositiveInfinity);
+                case "true": Next(); return Sigo.From(true);
+                case "false": Next(); return Sigo.From(false);
+                case "NaN": Next(); return Sigo.From(double.NaN);
+                case "Infinity": Next(); return Sigo.From(double.PositiveInfinity);
                 default:
+                    if (global.TryGetValue(raw, out var value)) {
+                        Next();
+                        return value;
+                    }
                     throw new Exception($"unexpected identifier '{raw}'");
             }
         }
@@ -62,7 +72,8 @@ namespace Sigobase.Language.Lang {
             var key = ReadKey();
             if (key == null) return null;
 
-            var keys = new List<string> {key};
+            keys.Clear();
+            keys.Add(key);
             while (t.Kind == Kind.Div) {
                 Next();
                 key = ReadKey();
@@ -74,14 +85,16 @@ namespace Sigobase.Language.Lang {
         }
 
         private ISigo ParseObject() {
-            ISigo ret = Sigo.Create(3);
+            var ret = Sigo.Create(3);
             Next();
             var k1 = lexer.Peek(1).Kind;
             if (t.Kind == Kind.Number && k1 != Kind.Colon && k1 != Kind.Div) {
                 var flags = int.Parse(t.Raw);
                 ret = Sigo.Create(flags);
                 Next();
-                if(t.Kind == Kind.Comma) Next();
+                if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
+                    Next();
+                }
             }
 
             while (true) {
@@ -99,13 +112,13 @@ namespace Sigobase.Language.Lang {
                     if (t.Kind == Kind.Colon) {
                         Next();
                     } else {
-                        throw new Exception($"':' expected at {t.Start}");
+                        throw new Exception($"':' expected after {string.Join("/", keys)} at {t.Start}");
                     }
 
                     var value = ParseValue();
                     ret = ret.SetN(keys, value, 0);
 
-                    if (t.Kind == Kind.Comma) {
+                    if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
                         Next();
                     }
                 } else {
@@ -128,10 +141,25 @@ namespace Sigobase.Language.Lang {
         }
 
         public ISigo Parse() {
-            var ret = ParseValue();
-            if(t.Kind == Kind.Eof)
-                return ret;
-            throw new Exception($"unexpected '{t.Raw}' at {t.Start}");
+            ISigo ret = Sigo.Create(0);
+            while (true) {
+                if (t.Kind == Kind.Eof) {
+                    return ret;
+                }
+                ret = ParseValue();
+                if (t.Kind == Kind.SemiColon) {
+                    Next();
+                }
+            }
+        }
+
+        private ISigo ParseAssignment() {
+            var key = t.Raw;
+            Next();
+            Next();
+            var value = ParseValue();
+            global = global.Set1(key, value);
+            return value;
         }
     }
 }
