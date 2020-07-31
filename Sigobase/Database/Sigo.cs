@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Sigobase.Implements;
 using Sigobase.Utils;
 
@@ -64,8 +65,8 @@ namespace Sigobase.Database {
             return Bits.IsTree(sigo.Flags);
         }
 
-        public static string ToString(this ISigo sigo, int indent) {
-            return ImplToString.ToString(sigo, indent);
+        public static string ToString(this ISigo sigo, Writer writer) {
+            return writer.WriteSigo(new StringBuilder(), sigo, 0).ToString();
         }
     }
 }

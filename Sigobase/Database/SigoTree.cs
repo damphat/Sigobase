@@ -102,7 +102,7 @@ namespace Sigobase.Database {
         }
 
         public override string ToString() {
-            return this.ToString(0);
+            return this.ToString(Writer.Default);
         }
 
         public ISigo Freeze() {

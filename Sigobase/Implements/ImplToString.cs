@@ -3,6 +3,7 @@ using System.Text;
 using Sigobase.Database;
 
 namespace Sigobase.Implements {
+    // TODO options (indent, flagImplicit, flagFrozen, keyPath, keyQuote, stringQuote, comma)
     public static class ImplToString {
         private static StringBuilder WriteLineIndent(StringBuilder sb, int indent, int indentLevel) {
             sb.AppendLine();
