@@ -91,5 +91,23 @@ namespace Sigobase.Tests {
             Assert.Equal(a1, a2);
             Assert.NotEqual(a1, b1);
         }
+
+        [Fact]
+        public void Overrided_equal_object() {
+            var list = new List<ISigo> {
+                Sigo.From("a"),
+                Sigo.From("a"),
+                Sigo.From("b"),
+                Sigo.Create(3, "k", "a"),
+                Sigo.Create(3, "k", "a"),
+                Sigo.Create(3, "k", "b")
+            };
+
+            foreach (var a in list) {
+                foreach (var b in list) {
+                    Assert.Equal(Sigo.Equals(a, b), a.Equals((object)b));
+                }
+            }
+        }
     }
 }
