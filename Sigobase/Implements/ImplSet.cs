@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Sigobase.Database;
+using Sigobase.Utils;
 
 namespace Sigobase.Implements {
     public static class ImplSet {
@@ -21,11 +20,11 @@ namespace Sigobase.Implements {
                 return value;
             }
 
-            if (!path.Contains('/')) {
+            if (!Paths.ShouldSplit(path)) {
                 return sigo.Set1(path, value);
             }
 
-            var keys = path.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+            var keys = Paths.Split(path);
             return SetN(sigo, keys, value, 0);
         }
     }
