@@ -1,5 +1,4 @@
 ﻿using Sigobase.Database;
-using Sigobase.Language.Lang;
 using Xunit;
 
 namespace Sigobase.Language.Tests {

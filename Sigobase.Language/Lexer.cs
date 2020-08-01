@@ -2,7 +2,7 @@
 using System.Text;
 using Sigobase.Language.Utils;
 
-namespace Sigobase.Language.Lang {
+namespace Sigobase.Language {
     public class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;

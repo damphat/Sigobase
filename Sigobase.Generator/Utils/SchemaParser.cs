@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sigobase.Database;
 using Sigobase.Generator.Schemas;
-using Sigobase.Language.Lang;
+using Sigobase.Language;
 
 namespace Sigobase.Generator.Utils {
     internal class SchemaParser {

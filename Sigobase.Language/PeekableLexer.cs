@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Sigobase.Language.Lang {
+namespace Sigobase.Language {
     public class PeekableLexer {
         private readonly Lexer lexer;
         private readonly Token[] buffer;

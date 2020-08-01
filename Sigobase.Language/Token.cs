@@ -1,4 +1,4 @@
-﻿namespace Sigobase.Language.Lang {
+﻿namespace Sigobase.Language {
     public class Token {
         private string raw;
 

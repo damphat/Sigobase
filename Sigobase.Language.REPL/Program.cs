@@ -1,6 +1,5 @@
 ﻿using System;
 using Sigobase.Database;
-using Sigobase.Language.Lang;
 using Sigobase.Utils;
 
 namespace Sigobase.Language.REPL {

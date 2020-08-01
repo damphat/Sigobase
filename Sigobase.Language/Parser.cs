@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Sigobase.Database;
 
-namespace Sigobase.Language.Lang {
+namespace Sigobase.Language {
     public class Parser {
         private readonly PeekableLexer lexer;
         private Token t;

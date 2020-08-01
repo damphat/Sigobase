@@ -1,4 +1,4 @@
-﻿namespace Sigobase.Language.Lang {
+﻿namespace Sigobase.Language {
     public enum Kind {
         Number,
         String,
