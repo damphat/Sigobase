@@ -2,14 +2,14 @@
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Schemas {
-    internal class ValueSchema : Schema {
+    internal class ValueSchema : SigoSchema {
         public ISigo Value { get; }
 
         public ValueSchema(object value) {
             Value = Sigo.From(value);
         }
 
-        public override IEnumerable<ISigo> Values(Options options) {
+        public override IEnumerable<ISigo> Generate(GenerateOptions options) {
             yield return Value;
         }
 

@@ -5,25 +5,25 @@ using Sigobase.Database;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Schemas {
-    internal class ObjectSchema : Schema {
+    internal class ObjectSchema : SigoSchema {
         public class FieldInfo {
-            public FieldInfo(Schema schema, bool optional) {
+            public FieldInfo(SigoSchema schema, bool optional) {
                 this.schema = schema;
                 this.optional = optional;
             }
 
-            public Schema schema;
+            public SigoSchema schema;
             public bool optional;
         }
 
         public List<ISigo> Flags;
         public Dictionary<string, FieldInfo> Fields = new Dictionary<string, FieldInfo>();
 
-        public void Add(string key, Schema schema, in bool optional) {
+        public void Add(string key, SigoSchema schema, in bool optional) {
             Fields.Add(key, new FieldInfo(schema, optional));
         }
 
-        public IEnumerable<ISigo> Generate(Options filter) {
+        private IEnumerable<ISigo> GenerateInternal(GenerateOptions filter) {
             var keys = new List<string>();
             var values = new List<List<ISigo>>();
 
@@ -34,7 +34,7 @@ namespace Sigobase.Generator.Schemas {
                     ret.Add(null);
                 }
 
-                ret.AddRange(field.Value.schema.Values(filter));
+                ret.AddRange(field.Value.schema.Generate(filter));
                 values.Add(ret);
             }
 
@@ -63,20 +63,20 @@ namespace Sigobase.Generator.Schemas {
             }
         }
 
-        public override IEnumerable<ISigo> Values(Options options) {
+        public override IEnumerable<ISigo> Generate(GenerateOptions options) {
             switch (options) {
-                default: return Generate(options);
-                case Options.Unique: {
-                    var ret = new SigoHashSet(Generate(options));
+                default: return GenerateInternal(options);
+                case GenerateOptions.Unique: {
+                    var ret = new SigoHashSet(GenerateInternal(options));
                     return ret.ToList();
                 }
-                case Options.Sorted: {
-                    var ret = new List<ISigo>(Generate(options));
+                case GenerateOptions.Sorted: {
+                    var ret = new List<ISigo>(GenerateInternal(options));
                     ret.Sort(new SigoComparer());
                     return ret;
                 }
-                case Options.Unique | Options.Sorted: {
-                    var ret = new SigoSortedSet(Generate(options));
+                case GenerateOptions.Unique | GenerateOptions.Sorted: {
+                    var ret = new SigoSortedSet(GenerateInternal(options));
                     return ret.ToList();
                 }
             }

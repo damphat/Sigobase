@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Sigobase.Generator.Schemas {
+namespace Sigobase.Generator {
     [Flags]
-    public enum Options {
+    public enum GenerateOptions {
         None = 0,
         Unique,
         Sorted,

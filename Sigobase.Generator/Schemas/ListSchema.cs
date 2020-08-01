@@ -4,34 +4,34 @@ using Sigobase.Database;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator.Schemas {
-    internal class ListSchema : Schema {
-        public IReadOnlyList<Schema> Items { get; }
+    internal class ListSchema : SigoSchema {
+        public IReadOnlyList<SigoSchema> Items { get; }
 
-        public ListSchema(IReadOnlyList<Schema> items) {
+        public ListSchema(IReadOnlyList<SigoSchema> items) {
             Items = items;
         }
 
-        private IEnumerable<ISigo> Generate(Options filter) {
-            return Items.SelectMany(schema => schema.Values(filter));
+        private IEnumerable<ISigo> GenerateInternal(GenerateOptions filter) {
+            return Items.SelectMany(schema => schema.Generate(filter));
         }
 
-        public override IEnumerable<ISigo> Values(Options options) {
+        public override IEnumerable<ISigo> Generate(GenerateOptions options) {
             switch (options) {
-                case Options.Unique: {
-                    var ret = new SigoHashSet(Generate(options));
+                case GenerateOptions.Unique: {
+                    var ret = new SigoHashSet(GenerateInternal(options));
                     return ret;
                 }
-                case Options.Sorted: {
-                    var ret = new List<ISigo>(Generate(options));
+                case GenerateOptions.Sorted: {
+                    var ret = new List<ISigo>(GenerateInternal(options));
                     ret.Sort(new SigoComparer());
                     return ret;
                 }
-                case Options.Unique | Options.Sorted: {
-                    var ret = new SigoSortedSet(Generate(options));
+                case GenerateOptions.Unique | GenerateOptions.Sorted: {
+                    var ret = new SigoSortedSet(GenerateInternal(options));
                     return ret.ToList();
                 }
-                case Options.None:
-                default: return Generate(options);
+                case GenerateOptions.None:
+                default: return GenerateInternal(options);
             }
         }
 

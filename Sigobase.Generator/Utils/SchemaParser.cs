@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Sigobase.Database;
 using Sigobase.Generator.Schemas;
+using Sigobase.Language.Lang;
 
-namespace Sigobase.Generator.Lang {
-    public class Parser {
+namespace Sigobase.Generator.Utils {
+    internal class SchemaParser {
         private readonly PeekableLexer lexer;
         private Token t;
 
@@ -14,12 +15,12 @@ namespace Sigobase.Generator.Lang {
             t = lexer.Peek(0);
         }
 
-        public Parser(string src) {
+        public SchemaParser(string src) {
             lexer = new PeekableLexer(src, 0, 1); // Peek(0), Peek(1)
             t = lexer.Peek(0);
         }
 
-        private Schema ParseObject() {
+        private SigoSchema ParseObject() {
             Next();
             var ret = new ObjectSchema {
                 Flags = ParseFlags()
@@ -60,7 +61,8 @@ namespace Sigobase.Generator.Lang {
                     continue;
                 }
 
-                throw new Exception("key expected");
+                // if(t.Kind == Eq) suggestion 'Did you mean ":" ?'
+                throw new Exception($"key expected, found {t.Kind}: '{t.Raw}'");
             }
         }
 
@@ -77,19 +79,19 @@ namespace Sigobase.Generator.Lang {
             return flags.Select(c => Sigo.Create(c - '0')).ToList();
         }
 
-        private Schema ParseNumber() {
+        private SigoSchema ParseNumber() {
             var number = double.Parse(t.Raw);
             Next();
             return new ValueSchema(number);
         }
 
-        private Schema ParseString() {
+        private SigoSchema ParseString() {
             var str = t.Value;
             Next();
             return new ValueSchema(str);
         }
 
-        private Schema ParseIdentifier() {
+        private SigoSchema ParseIdentifier() {
             switch (t.Raw) {
                 case "true": {
                     var ret = new ValueSchema(true);
@@ -112,7 +114,7 @@ namespace Sigobase.Generator.Lang {
             }
         }
 
-        private Schema ParseSingle() {
+        private SigoSchema ParseSingle() {
             switch (t.Kind) {
                 case Kind.Number:
                     return ParseNumber();
@@ -123,17 +125,17 @@ namespace Sigobase.Generator.Lang {
                 case Kind.Identifier:
                     return ParseIdentifier();
                 default:
-                    throw new Exception("Schema expected");
+                    throw new Exception($"SigoSchema expected, found {t.Kind}: '{t.Raw}'");
             }
         }
 
-        private Schema ParseOr() {
+        private SigoSchema ParseOr() {
             var item = ParseSingle();
             if (t.Kind != Kind.Or) {
                 return item;
             }
 
-            var items = new List<Schema> {item};
+            var items = new List<SigoSchema> {item};
 
             // ('|' single)+
             while (true) {
@@ -146,14 +148,14 @@ namespace Sigobase.Generator.Lang {
             }
         }
 
-        public Schema Parse() {
+        public SigoSchema Parse() {
             while (true) {
                 if (t.Kind == Kind.Identifier && lexer.Peek(1).Kind == Kind.Eq) {
                     var key = t.Raw;
                     Next();
                     Next();
                     var value = ParseOr();
-                    Schema.SetType(key, value);
+                    SigoSchema.SetType(key, value);
 
                     if (t.Kind == Kind.SemiColon) {
                         Next();
@@ -169,7 +171,7 @@ namespace Sigobase.Generator.Lang {
 
             var ret = ParseOr();
             if (t.Kind != Kind.Eof) {
-                throw new Exception("eof expected");
+                throw new Exception($"eof expected, found {t.Kind}: '{t.Raw}'");
             }
 
             return ret;

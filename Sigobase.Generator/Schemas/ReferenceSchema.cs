@@ -2,15 +2,15 @@
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Schemas {
-    internal class ReferenceSchema : Schema {
+    internal class ReferenceSchema : SigoSchema {
         public string Name { get; }
 
         public ReferenceSchema(string name) {
             Name = name;
         }
 
-        public override IEnumerable<ISigo> Values(Options options) {
-            return GetType(Name).Values(options);
+        public override IEnumerable<ISigo> Generate(GenerateOptions options) {
+            return GetType(Name).Generate(options);
         }
 
         public override int Count() {
