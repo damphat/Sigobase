@@ -67,13 +67,16 @@ namespace Sigobase.Generator.Utils {
         }
 
         private List<ISigo> ParseFlags() {
-            var flags = "01234567";
+            var flags = "3";
             if (t.Kind == Kind.Number) {
                 flags = t.Raw;
                 Next();
                 if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
                     Next();
                 }
+            } else if (t.Kind == Kind.Question) {
+                Next();
+                flags = "01234567";
             }
 
             return flags.Select(c => Sigo.Create(c - '0')).ToList();

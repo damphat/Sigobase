@@ -108,13 +108,16 @@ namespace Sigobase.Generator.Schemas {
             if (f != "01234567") {
                 sb.Append(f);
                 first = false;
+            } else {
+                sb.Append('?');
+                first = false;
             }
 
             foreach (var field in Fields) {
                 if (first) {
                     first = false;
                 } else {
-                    sb.Append(',');
+                    sb.Append(", ");
                 }
 
                 sb.Append(field.Key);

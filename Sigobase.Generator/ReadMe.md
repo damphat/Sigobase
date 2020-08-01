@@ -30,7 +30,7 @@ foreach(ISigo v in allPossibleValues) {
 ## Features
 explains with Sigobase.Generator.REPL
 
-List:
+### List:
 ```
 schema> 1 | 2 | 'a' | 'b'
 1
@@ -39,7 +39,12 @@ schema> 1 | 2 | 'a' | 'b'
 'b'
 ```
 
-Reference:
+### Define and reference:
+* Define a schema: ```<name> = <schemaDefinition>```.
+* Allow redefine schemas 
+* Use schemas to define new schemas.
+* Reference to unknown schema allow at define-time, but it throw exception at generate-time.
+
 ```
 schema> letter = 'a' | 'b'
 schema> number = 1 | 2
@@ -51,7 +56,9 @@ schema> letter | number  // reference to letter or number
 ```
 
 ### Flag:
-Sigo has 8 possible proton flags 0->7
+- Sigo object has 8 possible proton flags 0->7
+- Default is 3
+- {?} is short version of {01234567}
 
 ```
 schema> {234}
@@ -59,7 +66,10 @@ schema> {234}
 {3}
 {4}
 
-schema> {}  // default is 01234567
+schema> {}  // default is 3
+{}
+
+schema> {?}  // all
 {0}
 {1}
 {2}
@@ -70,7 +80,7 @@ schema> {}  // default is 01234567
 {7}
 ```
 
-Optional field:
+### Optional field:
 ```
 schema> {3, x?:1,  y?:1}
 {}
@@ -79,7 +89,7 @@ schema> {3, x?:1,  y?:1}
 {x:1, y:1}
 ```
 
-Auto field:
+### Auto field:
 ```
 schema> {3, money}   // auto convert to {3, money: money}
 {money: 'usd'}
