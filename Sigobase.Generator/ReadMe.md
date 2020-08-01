@@ -1,6 +1,9 @@
 ﻿# SigoGenerator
 Generate all possible sigo values using SigoChema
 
+This project will generate data for unit tests, making writing unit tests easier and fun.
+
+
 ```cs
 // define schema with name
 SigoSchema.Parse("money = 'usd' | 'eur' ;  number = 50|100");
@@ -9,7 +12,7 @@ SigoSchema.Parse("money = 'usd' | 'eur' ;  number = 50|100");
 Schame account = SigoSchema.Parse("{3; kind: money, amount?: number}");
 
 // generate
-IEnumerable<ISigo> allPossibleValues = schema.Generate();
+IEnumerable<ISigo> allPossibleValues = account.Generate();
 
 foreach(ISigo v in allPossibleValues) {
 	Console.WriteLine(v);
