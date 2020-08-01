@@ -1,5 +1,5 @@
-﻿# SigoGenerator
-Generate all possible sigo values using SigoChema
+﻿# Sigobase.Generator
+Generate all possible sigo values using SigoSchema
 
 This project will generate data for unit tests, making writing unit tests easier and fun.
 
@@ -100,3 +100,8 @@ schema> {3, money?}   // auto convert to {3, money?: money}
 {money: 'usd'}
 {money: 'eur'}
 ```
+
+## TODO
+- [ ] `xUnit` is multithread. Make `Parse()` thread safe.
+- [ ] Loop detection `schema> Person = {me: Person}`
+- [ ] Change `schema.Parse()` to `schema.Eval()` ?
