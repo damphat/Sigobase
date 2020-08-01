@@ -7,26 +7,27 @@ namespace Sigobase.Utils {
     public class Writer {
         public static Writer Json = new Writer (
             ignoreFlag: true,
+            indent: "",
+            keyQuoted: true,
             colon: ":",
             comma: ",",
             trailComma: false,
-            indent: "",
-            quote: '"',
-            keyQuoted: true
+            quote: '"'
         );
 
         public static Writer Js = new Writer(Json) {
-            KeyQuoted = false
+            KeyQuoted = false,
+            Quote = '\''
         };
 
-        public static Writer CSharp = new Writer(Json) {
-            Colon = "=",
-            Comma = ";",
-            TrailComma = true,
-            Indent = "",
-            Quote = '"',
-            KeyQuoted = false,
-        };
+        public static Writer CSharp = new Writer(
+            ignoreFlag: true,
+            indent: "",
+            keyQuoted: false,
+            colon: "=",
+            comma: ";",
+            trailComma: true,
+            quote: '"');
 
         public static Writer JsonPretty = new Writer(Json) { Indent = "  " };
         public static Writer JsPretty = new Writer(Js) { Indent = "  " };
@@ -54,19 +55,19 @@ namespace Sigobase.Utils {
             this.Indent = indent;
             this.KeyQuoted = keyQuoted;
             this.Colon = colon;
+            this.Comma = comma;
             this.TrailComma = trailComma;
             this.Quote = quote;
         }
 
         private Writer() : this(
             ignoreFlag: true,
+            indent: "",
+            keyQuoted: true,
             colon: ":",
             comma: ",",
             trailComma: false,
-            indent: "",
-            quote: '"',
-            keyQuoted: true) {
-        }
+            quote: '"') { }
 
         private Writer(Writer writer) {
             this.IgnoreFlag = writer.IgnoreFlag;
