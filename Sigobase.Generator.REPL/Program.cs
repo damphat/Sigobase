@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Sigobase.Generator.REPL {
     internal class Program {
 
-        private static void Help() {
+        private static void ShowSchemasAndHelp() {
             Console.WriteLine("Current Schemas:");
             foreach (var e in SigoSchema.SchemaDict) {
                 Console.WriteLine($"\t{e.Key}\t=\t{e.Value}");
@@ -42,7 +42,7 @@ namespace Sigobase.Generator.REPL {
                 SigoSchema.Parse(statement);
             }
 
-            Help();
+            ShowSchemasAndHelp();
 
             while (true) {
                 Console.Write("schema>");
@@ -53,7 +53,7 @@ namespace Sigobase.Generator.REPL {
                         continue;
                     case "?":
                     case "help": {
-                        Help();
+                        ShowSchemasAndHelp();
                         continue;
                     }
                     case "exit":
