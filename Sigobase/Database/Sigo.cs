@@ -68,5 +68,9 @@ namespace Sigobase.Database {
         public static string ToString(this ISigo sigo, Writer writer) {
             return writer.WriteSigo(new StringBuilder(), sigo, 0).ToString();
         }
+
+        public static ISigo Parse(string src) {
+            return new SigoParser(src).Parse();
+        }
     }
 }

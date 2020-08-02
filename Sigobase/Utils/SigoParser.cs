@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sigobase.Database;
+using Sigobase.Language;
 
-namespace Sigobase.Language {
-    public class Parser {
+namespace Sigobase.Utils {
+    public class SigoParser {
         private readonly PeekableLexer lexer;
         private Token t;
         private ISigo global = Sigo.Create(3);
@@ -13,7 +14,7 @@ namespace Sigobase.Language {
             t = lexer.Peek(0);
         }
 
-        public Parser(string src) {
+        public SigoParser(string src) {
             lexer = new PeekableLexer(src, 0, 1); // Peek(0), Peek(1)
             t = lexer.Peek(0);
         }
