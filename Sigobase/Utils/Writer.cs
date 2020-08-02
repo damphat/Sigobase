@@ -69,14 +69,14 @@ namespace Sigobase.Utils {
             trailComma: false,
             quote: '"') { }
 
-        private Writer(Writer writer) {
-            this.IgnoreFlag = writer.IgnoreFlag;
-            this.Indent = writer.Indent;
-            this.KeyQuoted = writer.KeyQuoted;
-            this.Colon = writer.Colon;
-            this.TrailComma = writer.TrailComma;
-            this.Quote = writer.Quote;
-
+        private Writer(Writer writer) : this(
+            writer.IgnoreFlag, 
+            writer.Indent, 
+            writer.KeyQuoted, 
+            writer.Colon, 
+            writer.Comma, 
+            writer.TrailComma, 
+            writer.Quote) {
         }
 
         private void WriteColon(StringBuilder sb) {
