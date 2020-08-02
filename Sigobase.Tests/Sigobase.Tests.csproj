@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sigobase.Generator\Sigobase.Generator.csproj" />
     <ProjectReference Include="..\Sigobase\Sigobase.csproj" />
   </ItemGroup>
 
