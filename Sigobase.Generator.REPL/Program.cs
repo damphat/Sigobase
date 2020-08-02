@@ -8,7 +8,7 @@ namespace Sigobase.Generator.REPL {
 
         private static void ShowSchemasAndHelp() {
             Console.WriteLine("Current Schemas:");
-            foreach (var e in SigoSchema.SchemaDict) {
+            foreach (var e in SigoSchema.Context) {
                 Console.WriteLine($"\t{e.Key}\t=\t{e.Value}");
             }
 

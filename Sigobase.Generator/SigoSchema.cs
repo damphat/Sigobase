@@ -10,17 +10,17 @@ namespace Sigobase.Generator {
         #region static
 
         public const GenerateOptions DefaultOptions = GenerateOptions.UniqueSorted;
-        public static readonly Dictionary<string, SigoSchema> SchemaDict = new Dictionary<string, SigoSchema>();
+        public static readonly Dictionary<string, SigoSchema> Context = new Dictionary<string, SigoSchema>();
 
         public static void SetType(string name, SigoSchema value) {
-            SchemaDict[name] = value;
+            Context[name] = value;
         }
 
         public static SigoSchema GetType(string name) {
-            if (SchemaDict.TryGetValue(name, out var value)) {
+            if (Context.TryGetValue(name, out var value)) {
                 return value;
             } else {
-                if (SchemaDict.TryGetValue(name, out var schema)) {
+                if (Context.TryGetValue(name, out var schema)) {
                     return schema;
                 } else {
                     throw new Exception($"schema '{name}' is not found");
