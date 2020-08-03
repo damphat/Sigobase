@@ -1,5 +1,8 @@
 ﻿namespace Sigobase.Language.Utils {
     internal static class Chars {
+        /// <summary>
+        /// return an int 0..15, or -1
+        /// </summary>
         public static int ToHex(in char c) {
             if (c >= '0' && c <= '9') {
                 return c - '0';
@@ -16,16 +19,16 @@
             return -1;
         }
 
-        public static bool Digit(char c) {
+        public static bool IsDigit(char c) {
             return c >= '0' && c <= '9';
         }
 
-        public static bool IdentifierStart(char c) {
+        public static bool IsIdentifierStart(char c) {
             return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_';
         }
 
-        public static bool IdentifierPart(char c) {
-            return IdentifierStart(c) || Digit(c);
+        public static bool IsIdentifierPart(char c) {
+            return IsIdentifierStart(c) || IsDigit(c);
         }
     }
 }

@@ -27,6 +27,11 @@ namespace Sigobase.Language {
             c = ++end < src.Length ? src[end] : Eof;
         }
 
+        private void Next(int n) {
+            end += n;
+            c = end < src.Length ? src[end] : Eof;
+        }
+
         private char Peek(int i) {
             i += end;
             return i < src.Length ? src[i] : Eof;
@@ -34,16 +39,14 @@ namespace Sigobase.Language {
 
 
         private void ScanLineComment() {
-            Next();
-            Next();
+            Next(2);
             while (c != '\r' && c != '\n' && c != Eof) {
                 Next();
             }
         }
 
         private void ScanBlockComment() {
-            Next();
-            Next();
+            Next(2);
 
             // search for */ or eof
             while (true) {
@@ -141,11 +144,11 @@ namespace Sigobase.Language {
                 case '"':
                 case '\'': return StringToken();
                 default:
-                    if (Chars.Digit(c)) {
+                    if (Chars.IsDigit(c)) {
                         return NumberToken();
                     }
 
-                    if (Chars.IdentifierStart(c)) {
+                    if (Chars.IsIdentifierStart(c)) {
                         return IdentifierToken();
                     }
 
@@ -168,7 +171,7 @@ namespace Sigobase.Language {
 
         private Token IdentifierToken() {
             Next();
-            while (Chars.IdentifierPart(c)) {
+            while (Chars.IsIdentifierPart(c)) {
                 Next();
             }
 
@@ -181,8 +184,7 @@ namespace Sigobase.Language {
         }
 
         private Token TwoCharToken(Kind kind) {
-            Next();
-            Next();
+            Next(2);
             return CreateToken(kind);
         }
 
@@ -194,11 +196,37 @@ namespace Sigobase.Language {
         // TODO parse 0xffff
         private Token NumberToken() {
             Next();
-            while (Chars.Digit(c)) {
+            while (Chars.IsDigit(c)) {
                 Next();
             }
 
-            var value = double.Parse(src.Substring(start, end - start));
+            if (c == '.') {
+                var c1 = Peek(1);
+                if (Chars.IsDigit(c1)) {
+                    Next(2);
+                    while (Chars.IsDigit(c)) {
+                        Next();
+                    }
+                }
+            }
+
+            if (c == 'e' || c == 'E') {
+                var n = 1;
+                var cn = Peek(n);
+                if (cn == '+' || cn == '-') {
+                    n++;
+                }
+                cn = Peek(n);
+                if (Chars.IsDigit(cn)) {
+                    n++;
+                }
+                Next(n);
+                while (Chars.IsDigit(c)) {
+                    Next();
+                }
+            }
+
+            var value = SigoConverter.ToDouble(src.Substring(start, end - start));
 
             return CreateToken(Kind.Number, value);
         }

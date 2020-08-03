@@ -6,6 +6,25 @@ using Xunit;
 namespace Sigobase.Language.Tests {
     public class LexerTests {
         [Theory]
+        [InlineData("0", 0.0)]
+        [InlineData("909", 909)]
+        [InlineData("1.5", 1.5)]
+        [InlineData("1E1", 1E1)]
+        [InlineData("1.5E1", 1.5E1)]
+        [InlineData("1.5E+1", 1.5E+1)]
+        [InlineData("1.5E-1", 1.5E-1)]
+        //[InlineData("Infinity", double.PositiveInfinity)]
+        //[InlineData("NaN", double.NaN)]
+        [InlineData("090.090e090", 090.090e090)]
+        [InlineData("99.99e99", 99.99e99)]
+        [InlineData("1e1000", double.PositiveInfinity)]
+        public void NumberTest(string src, double value) {
+            var lexer = new Lexer(src);
+            var token = lexer.Read(null);
+            Assert.Equal(value, token.Value);
+        }
+
+        [Theory]
         [InlineData("//\r")]
         [InlineData("//\n")]
         [InlineData("//\r\n")]
