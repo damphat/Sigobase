@@ -284,7 +284,7 @@ namespace Sigobase.Language {
                     var u = 0;
                     var i = 0;
                     for (; i < 4; i++) {
-                        var h = Chars.ToHex(c);
+                        var h = SigoConverter.Hex2Int(c);
                         if (h >= 0) {
                             Next();
                             u = u * 16 + h;
