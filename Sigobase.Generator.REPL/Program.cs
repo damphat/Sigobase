@@ -18,15 +18,15 @@ namespace Sigobase.Generator.REPL {
         }
 
         private static void GenerateAllPossibleValues(SigoSchema schema) {
-            Console.WriteLine($"About {schema.Count()} items in {schema}");
-            Console.WriteLine("--------------------");
             var count = 0;
             var values = schema.Generate(GenerateOptions.UniqueSorted);
+            Console.WriteLine("---------------------------------");
             foreach (var value in values) {
                 Console.WriteLine(value.ToString(Writer.Default));
                 count++;
             }
-            Console.WriteLine($"\t{count}/{schema.Count()} items listed");
+            Console.WriteLine("---------------------------------");
+            Console.WriteLine($"{count} items.");
         }
 
         private static void Main() {
