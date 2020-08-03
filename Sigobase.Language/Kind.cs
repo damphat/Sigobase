@@ -6,17 +6,28 @@
 
         Open,
         Close,
+        OpenBracket,
+        CloseBracket,
+        OpenParens,
+        CloseParens,
+
         Colon,
         Comma,
         SemiColon,
 
-        Or,
+        Plus,
+        Minus,
+        Mul,
         Div,
+        Or,
         Question,
 
         Eq,
+        EqEq,
+        Not,
+        NotEq,
 
         Unknown,
-        Eof
+        Eof,
     }
 }

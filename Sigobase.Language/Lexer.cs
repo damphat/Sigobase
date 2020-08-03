@@ -69,23 +69,34 @@ namespace Sigobase.Language {
         private void ScanSeparator() {
             separator = 0;
             while (true) {
-                if (c == '\r' || c == '\n') {
-                    separator |= 2;
-                    Next();
-                } else if (c == ' ' || c == '\t') {
-                    separator |= 1;
-                    Next();
-                } else if (c == '/') {
-                    var c1 = Peek(1);
-                    if (c1 == '/') {
-                        ScanLineComment();
-                    } else if (c1 == '*') {
-                        ScanBlockComment();
-                    } else {
-                        return; //  slash 
+                switch (c) {
+                    case ' ':
+                    case '\t':
+                        separator |= 1;
+                        Next();
+                        break;
+                    case '\r':
+                    case '\n':
+                        separator |= 2;
+                        Next();
+                        break;
+
+                    case '/': {
+                        switch (Peek(1)) {
+                            case '/':
+                                ScanLineComment();
+                                break;
+                            case '*':
+                                ScanBlockComment();
+                                break;
+                            default:
+                                return; //  slash 
+                        }
+
+                        break;
                     }
-                } else {
-                    break;
+                    default:
+                        return;  // not space & not slash
                 }
             }
         }
@@ -97,15 +108,36 @@ namespace Sigobase.Language {
             start = end;
 
             switch (c) {
-                case '|': return CharToken(Kind.Or);
+                case '+': return CharToken(Kind.Plus);
+                case '-': return CharToken(Kind.Minus);
+                case '*': return CharToken(Kind.Mul);
                 case '/': return CharToken(Kind.Div);
+                case '|': return CharToken(Kind.Or);
+
                 case '{': return CharToken(Kind.Open);
                 case '}': return CharToken(Kind.Close);
+                case '[': return CharToken(Kind.OpenBracket);
+                case ']': return CharToken(Kind.CloseBracket);
+                case '(': return CharToken(Kind.OpenParens);
+                case ')': return CharToken(Kind.CloseParens);
                 case ',': return CharToken(Kind.Comma);
                 case ';': return CharToken(Kind.SemiColon);
                 case ':': return CharToken(Kind.Colon);
-                case '=': return CharToken(Kind.Eq);
                 case '?': return CharToken(Kind.Question);
+
+                case '!': {
+                    switch (Peek(1)) {
+                        case '=': return TwoCharToken(Kind.NotEq);
+                    }
+
+                    return CharToken(Kind.Not);
+                }
+                case '=': {
+                    switch (Peek(1)) {
+                        case '=': return TwoCharToken(Kind.EqEq);
+                    }
+                    return CharToken(Kind.Eq);
+                }
                 case '"':
                 case '\'': return StringToken();
                 default:
@@ -144,6 +176,12 @@ namespace Sigobase.Language {
         }
 
         private Token CharToken(Kind kind) {
+            Next();
+            return CreateToken(kind);
+        }
+
+        private Token TwoCharToken(Kind kind) {
+            Next();
             Next();
             return CreateToken(kind);
         }
