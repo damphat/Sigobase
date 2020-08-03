@@ -23,14 +23,15 @@ namespace Sigobase.Tests {
         [Fact]
         public void ObjectTest() {
             var anything = SigoSchema.Parse(@"
-// paste this to Sigobase.Generator.REPL
-primitive = true | 1 | 'a';
-obj1 = {? x?:1, y?:1 } | primitive;
-obj2 = {? a?:obj1, b?:obj1};
+                // paste this to Sigobase.Generator.REPL
+                primitive = true | 1 | 'a';
+                obj1 = primitive | {? x?:1, y?:1 };
+                obj2 = primitive | {? a?: obj1, b?: obj1};
 
-primitive | obj2
-"
-            ).Generate().ToList();
+                // return obj2
+                obj2
+            "
+            ).Generate(GenerateOptions.None).ToList();
 
             foreach (var a in anything) {
                 Assert.Equal(a, Sigo.Parse(a.ToString(Writer.Default)));
