@@ -20,6 +20,43 @@ namespace Sigobase.Generator.Utils {
             t = lexer.Peek(0);
         }
 
+        private string Found() {
+            return t.Kind != Kind.Eof ? $"'{t.Raw}'" : "eof";
+        }
+
+        private string Expected(string thing) {
+            return $"{thing} expected, found {Found()} at {t.Start}";
+        }
+
+        private string ReadKey() {
+            string key;
+            switch (t.Kind) {
+                case Kind.Identifier:
+                    key = t.Raw;
+                    Next();
+                    return key;
+                case Kind.Number:
+                    key = t.Value.ToString();
+                    Next();
+                    return key;
+                case Kind.String:
+                    key = (string) t.Value;
+                    Next();
+                    return key;
+                default:
+                    throw new Exception(Expected("key"));
+            }
+        }
+
+        private bool ReadKind(Kind kind) {
+            if (t.Kind == kind) {
+                Next();
+                return true;
+            }
+
+            return false;
+        }
+
         private SigoSchema ParseObject() {
             Next();
             var ret = new ObjectSchema {
@@ -32,46 +69,49 @@ namespace Sigobase.Generator.Utils {
                     return ret;
                 }
 
-                if (t.Kind == Kind.Identifier) {
-                    var key = t.Raw;
-                    Next();
-                    var optional = false;
-                    if (t.Kind == Kind.Question) {
-                        optional = true;
-                        Next();
-                    }
+                var key = ReadKey();
+                var optional = ReadKind(Kind.Question);
+                var hasColon = ReadKind(Kind.Colon);
 
-                    if (t.Kind == Kind.Colon) {
-                        Next();
+                SigoSchema value;
 
-                        var value = ParseOr();
-                        ret.Add(key, value, optional);
-
-                        
-                    } else {
-                        ret.Add(key, new ReferenceSchema(key), optional);
-
-                    }
-
-                    // skip 1 comma or semicolon if it exists
-                    if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
-                        Next();
-                    }
-
-                    continue;
+                if (hasColon) {
+                    value = ParseOr();
+                } else if (SigoSchema.Context.ContainsKey(key)) {
+                    value = SigoSchema.Context[key];
+                } else {
+                    throw new Exception(Expected("':'"));
                 }
 
-                // if(t.Kind == Eq) suggestion 'Did you mean ":" ?'
-                throw new Exception($"key expected, found {t.Kind}: '{t.Raw}'");
+                ret.Add(key, value, optional);
+
+                // skip 1 comma or semicolon if it exists
+                if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
+                    Next();
+                }
             }
         }
 
         private List<ISigo> ParseFlags() {
             var flags = "3";
-            if (t.Kind == Kind.Number) {
+
+            bool IsFlag() {
+                if (t.Kind != Kind.Number) {
+                    return false;
+                }
+
+                var t1 = lexer.Peek(1).Kind;
+                if (t1 == Kind.Colon) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (IsFlag()) {
                 flags = t.Raw;
                 Next();
-                if ((t.Kind == Kind.Comma) || (t.Kind == Kind.SemiColon)) {
+                if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
                     Next();
                 }
             } else if (t.Kind == Kind.Question) {
@@ -128,7 +168,7 @@ namespace Sigobase.Generator.Utils {
                 case Kind.Identifier:
                     return ParseIdentifier();
                 default:
-                    throw new Exception($"SigoSchema expected, found {t.Kind}: '{t.Raw}'");
+                    throw new Exception(Expected("value"));
             }
         }
 
@@ -160,9 +200,7 @@ namespace Sigobase.Generator.Utils {
                     var value = ParseOr();
                     SigoSchema.SetType(key, value);
 
-                    if (t.Kind == Kind.SemiColon) {
-                        Next();
-                    }
+                    ReadKind(Kind.SemiColon);
                 } else {
                     break;
                 }
@@ -173,8 +211,10 @@ namespace Sigobase.Generator.Utils {
             }
 
             var ret = ParseOr();
+            ReadKind(Kind.SemiColon);
+
             if (t.Kind != Kind.Eof) {
-                throw new Exception($"eof expected, found {t.Kind}: '{t.Raw}'");
+                throw new Exception($"unexpected token, found {Found()} at {t.Start}");
             }
 
             return ret;
