@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language", "Sigoba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language.Tests", "Sigobase.Language.Tests\Sigobase.Language.Tests.csproj", "{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigobase.Generator.Tests", "Sigobase.Generator.Tests\Sigobase.Generator.Tests.csproj", "{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator.Tests", "Sigobase.Generator.Tests\Sigobase.Generator.Tests.csproj", "{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
