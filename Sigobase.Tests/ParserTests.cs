@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using Sigobase.Database;
 using Sigobase.Generator;
 using Sigobase.Utils;
@@ -6,12 +7,34 @@ using Xunit;
 
 namespace Sigobase.Tests {
     public class ParserTests {
-        [Fact]
-        public void LeafTest() {
-            Assert.Equal(Sigo.From(false), Sigo.Parse("false"));
-            Assert.Equal(Sigo.From(true), Sigo.Parse("true"));
-            Assert.Equal(Sigo.From(123), Sigo.Parse("123"));
-            Assert.Equal(Sigo.From("abc"), Sigo.Parse("'abc'"));
+        [Theory]
+        [InlineData(" 1")]
+        [InlineData("+1")]
+        [InlineData("-1")]
+        [InlineData(" Infinity")]
+        [InlineData("+Infinity")]
+        [InlineData("-Infinity")]
+        [InlineData(" NaN")]
+        [InlineData("+NaN")]
+        [InlineData("-NaN")]
+        public void NumberTest(string src) {
+            var num = double.Parse(src, CultureInfo.InvariantCulture);
+
+            Assert.Equal(Sigo.From(num), Sigo.Parse(src));
+        }
+
+        [Theory]
+        [InlineData("true", true)]
+        [InlineData("false", false)]
+        public void BoolTest(string src, bool value) {
+            Assert.Equal(Sigo.From(value), Sigo.Parse(src));
+        }
+
+        [Theory]
+        [InlineData("'abc'", "abc")]
+        [InlineData("\"abc\"", "abc")]
+        public void StringTest(string src, string value) {
+            Assert.Equal(Sigo.From(value), Sigo.Parse(src));
         }
 
         [Fact]

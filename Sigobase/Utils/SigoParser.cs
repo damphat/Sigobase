@@ -21,6 +21,19 @@ namespace Sigobase.Utils {
 
         private ISigo ParseValue() {
             switch (t.Kind) {
+                case Kind.Plus:
+                case Kind.Minus: {
+                    var k = t.Kind;
+                    Next();
+                    var start = t.Start;
+
+                    var value = ParseValue();
+                    if (value.Data is double d) {
+                        return k == Kind.Minus ? Sigo.From(-d) : Sigo.From(d);
+                    } else {
+                        throw new Exception($"number expected at {start}");
+                    }
+                }
                 case Kind.Number: return ParseNumber();
                 case Kind.String: return ParseString();
                 case Kind.Open: return ParseObject();
@@ -39,15 +52,24 @@ namespace Sigobase.Utils {
 
             var raw = t.Raw;
             switch (raw) {
-                case "true": Next(); return Sigo.From(true);
-                case "false": Next(); return Sigo.From(false);
-                case "NaN": Next(); return Sigo.From(double.NaN);
-                case "Infinity": Next(); return Sigo.From(double.PositiveInfinity);
+                case "true":
+                    Next();
+                    return Sigo.From(true);
+                case "false":
+                    Next();
+                    return Sigo.From(false);
+                case "NaN":
+                    Next();
+                    return Sigo.From(double.NaN);
+                case "Infinity":
+                    Next();
+                    return Sigo.From(double.PositiveInfinity);
                 default:
                     if (global.TryGetValue(raw, out var value)) {
                         Next();
                         return value;
                     }
+
                     throw new Exception($"unexpected identifier '{raw}'");
             }
         }
@@ -59,6 +81,7 @@ namespace Sigobase.Utils {
                 Next();
                 return key;
             }
+
             if (t.Kind == Kind.Number || t.Kind == Kind.String) {
                 key = t.Value.ToString();
                 Next();
@@ -70,13 +93,18 @@ namespace Sigobase.Utils {
 
         private List<string> ReadKeys() {
             var key = ReadKey();
-            if (key == null) return null;
+            if (key == null) {
+                return null;
+            }
 
             var keys = new List<string> {key};
             while (t.Kind == Kind.Div) {
                 Next();
                 key = ReadKey();
-                if(key == null) throw new Exception($"key expected after '/' at {t.Start}");
+                if (key == null) {
+                    throw new Exception($"key expected after '/' at {t.Start}");
+                }
+
                 keys.Add(key);
             }
 
@@ -123,7 +151,6 @@ namespace Sigobase.Utils {
                 } else {
                     throw new Exception($"key expected at {t.Start}");
                 }
-
             }
         }
 
@@ -140,11 +167,12 @@ namespace Sigobase.Utils {
         }
 
         public ISigo Parse() {
-            ISigo ret = Sigo.Create(0);
+            var ret = Sigo.Create(0);
             while (true) {
                 if (t.Kind == Kind.Eof) {
                     return ret;
                 }
+
                 ret = ParseValue();
                 if (t.Kind == Kind.SemiColon) {
                     Next();
