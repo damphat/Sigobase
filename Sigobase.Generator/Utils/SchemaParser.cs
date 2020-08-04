@@ -117,6 +117,9 @@ namespace Sigobase.Generator.Utils {
             } else if (t.Kind == Kind.Question) {
                 Next();
                 flags = "01234567";
+                if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
+                    Next();
+                }
             }
 
             return flags.Select(c => Sigo.Create(c - '0')).ToList();

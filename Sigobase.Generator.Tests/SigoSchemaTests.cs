@@ -29,6 +29,18 @@ namespace Sigobase.Generator.Tests {
         }
 
         [Fact]
+        public void Flag_037() {
+            var expected = new[] {
+                Sigo.Create(0),
+                Sigo.Create(3),
+                Sigo.Create(7),
+
+            };
+
+            Utils.Equal(expected, Gen("{037}"));
+        }
+
+        [Fact]
         public void Flag_default_is_3() {
             var expected = new[] {
                 Sigo.Create(3)
@@ -115,5 +127,48 @@ namespace Sigobase.Generator.Tests {
 
             Utils.Equal(expected, Gen(src));
         }
+
+        [Theory]
+        [InlineData("{1;}", "{1}")]
+        [InlineData("{1,}", "{1}")]
+
+        [InlineData("{1,x:1,}", "{1, x:1}")]
+        [InlineData("{1;x:1;}", "{1, x:1}")]
+        [InlineData("{1 x:1 }", "{1, x:1}")]
+
+        [InlineData("{x:1;y:1;}", "{x:1, y:1}")]
+        [InlineData("{x:1,y:1,}", "{x:1, y:1}")]
+        [InlineData("{x:1 y:1 }", "{x:1, y:1}")]
+        public void OptionalSeparator(string a, string b) {
+            var sa = SigoSchema.Parse(a);
+            var sb = SigoSchema.Parse(b);
+            Assert.Equal(sa.Count(), sb.Count());
+        }
+
+        [Theory]
+        [InlineData("{?;}", "{?}")]
+        [InlineData("{?,}", "{?}")]
+
+        [InlineData("{?,x:1,}", "{?, x:1}")]
+        [InlineData("{?;x:1;}", "{?, x:1}")]
+        [InlineData("{? x:1 }", "{?, x:1}")]
+
+        [InlineData("x=1; {x?,}", "x=1; {x?}")]
+        [InlineData("x=1; {x?;}", "x=1; {x?}")]
+        [InlineData("x=1; {x? }", "x=1; {x?}")]
+        public void OptionalSeparatorWithQuestion(string a, string b) {
+            var sa = SigoSchema.Parse(a);
+            var sb = SigoSchema.Parse(b);
+            Assert.Equal(sa.Count(), sb.Count());
+        }
+
+        [Theory]
+        [InlineData("x=1|2 x", "x=1|2; x")]
+        public void OptionalSemiconlon(string a, string b) {
+            var sa = SigoSchema.Parse(a);
+            var sb = SigoSchema.Parse(b);
+            Assert.Equal(sa.Count(), sb.Count());
+        }
+
     }
 }
