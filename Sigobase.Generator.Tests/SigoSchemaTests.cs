@@ -170,5 +170,12 @@ namespace Sigobase.Generator.Tests {
             Assert.Equal(sa.Count(), sb.Count());
         }
 
+
+        [Fact]
+        public void TODO_bug_multiple_values() {
+            var two = SigoSchema.Parse("1; 2");
+
+            Utils.Equal(new []{Sigo.From(2)}, two.Generate());
+        }
     }
 }

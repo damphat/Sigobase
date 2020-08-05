@@ -194,33 +194,33 @@ namespace Sigobase.Generator.Utils {
             }
         }
 
-        public SigoSchema Parse() {
-            while (true) {
-                if (t.Kind == Kind.Identifier && lexer.Peek(1).Kind == Kind.Eq) {
-                    var key = t.Raw;
-                    Next();
-                    Next();
-                    var value = ParseOr();
-                    SigoSchema.SetType(key, value);
+        private SigoSchema ParseAssignment() {
+            var key = t.Raw;
+            Next();
+            Next();
+            var value = ParseOr();
+            SigoSchema.SetType(key, value);
 
-                    ReadKind(Kind.SemiColon);
-                } else {
-                    break;
-                }
-            }
-
-            if (t.Kind == Kind.Eof) {
-                return new NothingSchema();
-            }
-
-            var ret = ParseOr();
             ReadKind(Kind.SemiColon);
+            return Nothing;
+        }
 
-            if (t.Kind != Kind.Eof) {
-                throw new Exception($"unexpected token, found {Found()} at {t.Start}");
+        private SigoSchema ParseStatement() {
+            if (t.Kind == Kind.Identifier && lexer.Peek(1).Kind == Kind.Eq) {
+                return ParseAssignment();
+            } else {
+                return ParseOr();
             }
+        }
 
-            return ret;
+        static readonly SigoSchema Nothing = new NothingSchema();
+        public SigoSchema Parse() {
+            var ret = Nothing;
+            while (true) {
+                if (t.Kind == Kind.Eof) return ret;
+                ret = ParseStatement();
+                ReadKind(Kind.SemiColon);
+            }
         }
     }
 }

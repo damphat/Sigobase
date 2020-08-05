@@ -2,6 +2,7 @@
 using Sigobase.Database;
 
 namespace Sigobase.Generator.Schemas {
+    // TODO this should be singleton
     internal class NothingSchema : SigoSchema {
         public override IEnumerable<ISigo> Generate(GenerateOptions options) {
             yield break;
