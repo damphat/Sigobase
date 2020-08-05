@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Sigobase.Database;
@@ -67,9 +68,9 @@ namespace Sigobase.Tests {
         [InlineData("{1;}")]
         [InlineData("{1, x:1}")]
         [InlineData("{1, x:1,}")]
-        [InlineData("{1, x:1;}")]
+        [InlineData("{1; x:1;}")]
         [InlineData("{1, x:1, y:1}")]
-        [InlineData("{1, x:1; y:1}")]
+        [InlineData("{1; x:1; y:1}")]
         public void Object_separatorTests(string src) {
             string Clean(string src) {
                 src = src
@@ -97,6 +98,79 @@ namespace Sigobase.Tests {
             var expected = Sigo.Create(3, "name", Sigo.Create(3, "first", 1, "last", 2));
             Assert.Equal(expected, Sigo.Parse("{name/first:1, name/last:2}"));
         }
+
+        [Theory]
+        [InlineData("[]", "{}")]
+        [InlineData("[ ]", "{}")]
+        [InlineData("[0]",  "{0:0}")]
+        [InlineData("[0 ]", "{0:0}")]
+        [InlineData("[0,]", "{0:0}")]
+        [InlineData("[0;]", "{0:0}")]
+        [InlineData("[0 1 ]", "{0:0,1:1}")]
+        [InlineData("[0,1,]", "{0:0,1:1}")]
+        [InlineData("[0;1;]", "{0:0,1:1}")]
+        [InlineData("[[8,9]]", "{0:{0:8,1:9}}")]
+        public void TODO_ArrayTest(string src, string expect) {
+            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+        }
+
+        [Theory]
+        [InlineData("{,}")]
+        [InlineData("{,1}")]
+        [InlineData("{1x:1}")]
+        [InlineData("{x:1y:1}")]
+        public void Object_errorTests(string src) {
+            Assert.ThrowsAny<Exception>(() => Sigo.Parse(src));
+        }
+
+        [Theory]
+        //unexpected separator
+        [InlineData("[,]")]
+        [InlineData("[,0]")]
+        [InlineData("[0,,true]")]
+        // ',' expected
+        [InlineData("[0true]")]
+        // ']' expected
+        [InlineData(" [")]
+        [InlineData(" [0")]
+        // value expected
+        [InlineData(" [0,")]
+        public void TODO_ArrayErrorTest(string src) {
+            Assert.ThrowsAny<Exception>(() => Sigo.Parse(src));
+        }
+
+        [Theory()]
+        [InlineData("x=1; {x}", "{x:1}")]
+        [InlineData("x=1; {a/x}", "{a/x:1}")]
+        public void TODO_ContextTest(string a, string b) {
+            Assert.Equal(Sigo.Parse(a), Sigo.Parse(b));
+        }
+
+        [Fact(Skip = "TODO")]
+        public void TODO_MergeTest() {
+            Sigo.Parse("{name: 'Phat'} | {0, age: 10}");
+        }
+
+        [Fact (Skip = "TODO")]
+        public void TODO_SelectTest() {
+            Sigo.Parse("select{name:{first, last}, friends:{0, 2, 4}}");
+        }
+
+        [Fact(Skip = "TODO")]
+        public void TODO_ExpressionTest() {
+            Sigo.Parse("(1+2)*3");
+        }
+
+        [Theory()]
+        [InlineData("{'a':1} ", "{a:1}")]
+        [InlineData("{'/a':1}", "{a:1}")]
+        [InlineData("{'a/':1}", "{a:1}")]
+        [InlineData("{'a/b':1}", "{a:{b:1}}")]
+        [InlineData("{'/a//b/':1}", "{a:{b:1}}")]
+        [InlineData("{'a'/'b':1}", "{a:{b:1}}")]
+        public void TODO_PathAsString(string src, string expect) {
+            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+        }
     }
 
     public class SigoWraper {
@@ -110,7 +184,7 @@ namespace Sigobase.Tests {
             return Sigo.ToString();
         }
 
-        public override bool Equals(object? obj) {
+        public override bool Equals(object obj) {
             return obj is SigoWraper other && Sigo.Equals(other.Sigo);
         }
 
