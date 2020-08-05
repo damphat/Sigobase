@@ -38,7 +38,8 @@ namespace Sigobase.Utils {
         };
         public static Writer Pretty = new Writer(Default) {
             Indent = "  ",
-            Comma = ""
+            Comma = "",
+            Colon = ": "
         };
 
         public bool IgnoreFlag { get; private set; }
