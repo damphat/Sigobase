@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Sigobase.Implements;
+using Sigobase.Language;
 using Sigobase.Utils;
 
 namespace Sigobase.Database {

@@ -6,7 +6,7 @@ using Sigobase.Database;
 using Sigobase.Generator;
 using Xunit;
 
-namespace Sigobase.Tests {
+namespace Sigobase.Language.Tests {
     public class ParserTests {
         [Theory]
         [InlineData(" 1")]
@@ -61,6 +61,17 @@ namespace Sigobase.Tests {
         [MemberData(nameof(ObjectData), "{?}")]
         public void Object_emptyTests(SigoWraper wraper) {
             Assert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
+        }
+
+        [Theory ()]
+        [InlineData("true")]
+        [InlineData("false")]
+        [InlineData("Infinity")]
+        [InlineData("NaN")]
+        [InlineData("123")]
+        [InlineData("'abc'")]
+        public void TODO_Assign_to_literal(string variableName) {
+            Assert.ThrowsAny<Exception>(() => Sigo.Parse(variableName + " = 1"));
         }
 
         [Theory]

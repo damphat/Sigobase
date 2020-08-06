@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Sigobase.Database;
-using Sigobase.Language;
+using Sigobase.Utils;
 
-namespace Sigobase.Utils {
+namespace Sigobase.Language {
     public class SigoParser {
         private readonly PeekableLexer lexer;
         private ISigo global = Sigo.Create(3);
