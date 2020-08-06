@@ -1,18 +1,27 @@
 ﻿using Sigobase.Database;
+using Sigobase.Utils;
 
 namespace Sigobase.Implements {
     public static class ImplCreate {
-        private static string ToPath(object path) {
-            return path?.ToString();
-        }
-
         public static ISigo Create(int lmr, params object[] pvs) {
             var i = 0;
             var ret = Sigo.Create(lmr);
             while (i < pvs.Length) {
-                var path = ToPath(pvs[i++]);
+                var path = Paths.ToPath(pvs[i++]);
                 var value = Sigo.From(pvs[i++]);
-                ret = ret.Set(path, value);
+                if (path == null) {
+                    return value;
+                }
+
+                if (path is string key) {
+                    if (key == "") {
+                        return value;
+                    }
+
+                    ret = ret.Set1(key, value);
+                } else if (path is string[] keys) {
+                    ret = ret.SetN(keys, value, 0);
+                }
             }
 
             return ret;

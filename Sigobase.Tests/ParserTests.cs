@@ -115,6 +115,16 @@ namespace Sigobase.Tests {
         }
 
         [Theory]
+        [InlineData("{true:1}", "{'true':1}")]
+        [InlineData("{false:1}", "{'false':1}")]
+        [InlineData("{Infinity:1}", "{'Infinity':1}")]
+        [InlineData("{NaN:1}", "{'NaN':1}")]
+        [InlineData("{1.5:1}", "{'1.5':1}")]
+        public void TODO_PathTest(string src, string expect) {
+            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+        }
+
+        [Theory]
         [InlineData("{,}")]
         [InlineData("{,1}")]
         [InlineData("{1x:1}")]
@@ -162,6 +172,8 @@ namespace Sigobase.Tests {
         }
 
         [Theory()]
+        [InlineData("{'':1} ", "1")]
+        [InlineData("{'/':1} ", "1")]
         [InlineData("{'a':1} ", "{a:1}")]
         [InlineData("{'/a':1}", "{a:1}")]
         [InlineData("{'a/':1}", "{a:1}")]

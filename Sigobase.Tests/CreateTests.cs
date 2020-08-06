@@ -1,17 +1,27 @@
-﻿using Sigobase.Database;
+﻿using System;
+using Sigobase.Database;
 using Xunit;
 
 namespace Sigobase.Tests {
     public class CreateTests {
-        [Fact]
-        public void AllowPathWithoutKeys_returnTheChild() {
-            // TODO should we disallow empty paths?
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("/")]
+        public void AllowPathWithoutKeys_returnTheChild(string path) {
+            var value = Sigo.From("child");
+            Assert.Equal(value, Sigo.Create(3, path, value));
+        }
 
-            var child = Sigo.From("child");
-
-            Assert.Equal(child, Sigo.Create(3, null, child));
-            Assert.Equal(child, Sigo.Create(3, "", child));
-            Assert.Equal(child, Sigo.Create(3, "/", child));
+        [Theory]
+        [InlineData(true, "true")]
+        [InlineData(false, "false")]
+        [InlineData(0.0, "0")]
+        [InlineData(1.5, "1.5")]
+        [InlineData(double.PositiveInfinity, "Infinity")]
+        public void AllowPathFromObject(object key, string sameAs) {
+            var sigo = Sigo.Create(3, key, "v");
+            Assert.Equal("v", sigo.Get1(sameAs).Data);
         }
 
         [Fact]
@@ -28,7 +38,6 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void AllowPathDuplicated_overwritingChild() {
-            // TODO should we disallow overwriting
             var user = Sigo.Create(3,
                 "user/id", 100.0,
                 "user/id", 200.0,
@@ -37,15 +46,20 @@ namespace Sigobase.Tests {
             Assert.Equal(200.0, user.Get1("user").Get1("id").Data);
         }
 
-        [Fact]
-        public void AllowPathFromObject() {
-            // TODO object to path specification
-            // TODO in strict mode, only non empty strings and integers are allows 
-            var paths = new object[] {true, false, 1.5, 'c'};
-            foreach (var path in paths) {
-                var sigo = Sigo.Create(3, path, "v");
-
-                Assert.Equal("v", sigo.Get1(path.ToString()).Data);
+        [Theory(Skip = "TODO")]
+        [InlineData(false, null)]
+        [InlineData(false, "")]
+        [InlineData(false, "/")]
+        [InlineData(false, "1.5")]
+        [InlineData(false, "/a")]
+        [InlineData(true, "1")]
+        [InlineData(true, "a")]
+        [InlineData(true, "a/1")]
+        public void TODO_strict(bool allow, string path) {
+            if (allow) {
+                Assert.Equal("v", Sigo.Create(3, path, "v").Get(path).Data);
+            } else {
+                Assert.ThrowsAny<Exception>(() => Sigo.Create(3, path, "v"));
             }
         }
     }

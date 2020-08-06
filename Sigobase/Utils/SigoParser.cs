@@ -214,7 +214,7 @@ namespace Sigobase.Utils {
             }
 
             if (t.Kind == Kind.Number) {
-                key = ((double)t.Value).ToString(CultureInfo.InvariantCulture);
+                key = ((double) t.Value).ToString(CultureInfo.InvariantCulture);
                 Next();
                 return key;
             }
@@ -225,7 +225,8 @@ namespace Sigobase.Utils {
                 if (Paths.ShouldSplit(key)) {
                     return Paths.Split(key);
                 }
-                else return key;
+
+                return key;
             }
 
             return null;
@@ -233,15 +234,19 @@ namespace Sigobase.Utils {
 
         // TODO gc problem
         private List<string> ParseObjectKeys() {
-
             var key = ParseObjectKey();
             if (key == null) {
                 return null;
             }
 
             var keys = new List<string>();
-            if(key is string s) keys.Add(s);
-            else if (key is string[] ss) keys.AddRange(ss);
+            if (key is string s) {
+                if (s != "") {
+                    keys.Add(s);
+                }
+            } else if (key is string[] ss) {
+                keys.AddRange(ss);
+            }
 
             while (t.Kind == Kind.Div) {
                 Next();
@@ -249,9 +254,13 @@ namespace Sigobase.Utils {
                 if (key == null) {
                     throw new Exception(Expected("key"));
                 }
+
                 // TODO why can not "is string s" but "is string[] ss"
-                if (key is string) keys.Add((string)key);
-                else if (key is string[] ss) keys.AddRange(ss);
+                if (key is string) {
+                    keys.Add((string) key);
+                } else if (key is string[] ss) {
+                    keys.AddRange(ss);
+                }
             }
 
             return keys;
@@ -290,7 +299,7 @@ namespace Sigobase.Utils {
             var k = t.Kind;
             Next();
             var d = ParseDouble();
-            return k == Kind.Plus ? d : -d;
+            return k == Kind.Minus ? -d : d;
         }
 
         private object ParseValue() {

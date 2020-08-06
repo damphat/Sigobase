@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Sigobase.Utils {
+    // TODO int to string cache
     public static class Paths {
         public static void CheckKey(string key) {
             if (string.IsNullOrEmpty(key)) {
@@ -10,6 +12,18 @@ namespace Sigobase.Utils {
 
             if (key.Contains('/')) {
                 throw new ArgumentException($"'{key}' contains '/'");
+            }
+        }
+
+        public static object ToPath(object v) {
+            switch (v) {
+                case null: return null;
+                case bool b: return b ? "true" : "false";
+                case string s when s == "": return "";
+                case string s: return ShouldSplit(s) ? (object)Split(s) : s;
+                case IConvertible ic: return ic.ToString(CultureInfo.InvariantCulture);
+                default:
+                    throw new NotImplementedException(v.GetType().Name);
             }
         }
 
