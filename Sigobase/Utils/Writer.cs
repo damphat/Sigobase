@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Sigobase.Database;
@@ -130,6 +131,7 @@ namespace Sigobase.Utils {
                             sb.Append(@"\t");
                             break;
                         default: {
+                            // TODO move to Utils
                             char Hex(int n) {
                                 return n < 10 ? (char) ('0' + n) : (char) ('a' + (n - 10));
                             }
@@ -252,6 +254,7 @@ namespace Sigobase.Utils {
                 case null: return sb.Append("null");
                 case bool b: return sb.Append(b ? "true" : "false");
                 case string s: return WriteString(sb, s);
+                case double d: return sb.Append(d.ToString(CultureInfo.InvariantCulture));
                 // FIXME sigo tree inside sigo leaf
                 case ISigo sigo: return WriteSigo(sb, sigo, level);
                 case IDictionary dict: return WriteObject(sb, dict, level);
