@@ -163,7 +163,6 @@ namespace Sigobase.Language.Tests {
                 .Where(e => e != Kind.Eof)
                 .ToList();
 
-            var sep = 1;
             var pre = " ";
             var sub = "{";
 
