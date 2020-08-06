@@ -188,10 +188,8 @@ namespace Sigobase.Language {
             return CreateToken(kind);
         }
 
-        // TODO parse fraction & exponent
-        // TODO parse sign, +1 -1
-        // TODO parse -Infinity, NaN
-        // TODO parse -1E1000 => -Infinity
+        // Does not include sign, Infinity, NaN, which are concepted in parser
+        // 1E1000 => -Infinity (netcore vs net framework)
         // TODO parse 1_000
         // TODO parse 0xffff
         private Token NumberToken() {

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sigobase.Language\Sigobase.Language.csproj" />
     <ProjectReference Include="..\Sigobase\Sigobase.csproj" />
   </ItemGroup>
 

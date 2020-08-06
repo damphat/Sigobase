@@ -18,8 +18,4 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sigobase.Language\Sigobase.Language.csproj" />
-  </ItemGroup>
-
 </Project>
