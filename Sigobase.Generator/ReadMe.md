@@ -5,11 +5,11 @@ This project will generate data for unit tests, making writing unit tests easier
 
 
 ```cs
-// define schema with name
+// define schemas with syntax: <Name> = <SchemaDefinition> 
 SigoSchema.Parse("money = 'usd' | 'eur' ;  number = 50|100");
 
 // anonumous schema
-Schame account = SigoSchema.Parse("{3; kind: money, amount?: number}");
+Schame account = SigoSchema.Parse("{ kind: money, amount?: number }");
 
 // generate
 IEnumerable<ISigo> allPossibleValues = account.Generate();
@@ -63,7 +63,7 @@ schema> letter | number  // reference to letter or number
 ```
 schema> {234}
 {2}
-{3}
+{}
 {4}
 
 schema> {}  // default is 3
@@ -73,7 +73,7 @@ schema> {?}  // all
 {0}
 {1}
 {2}
-{3}
+{}
 {4}
 {5}
 {6}
@@ -82,7 +82,7 @@ schema> {?}  // all
 
 ### Optional field:
 ```
-schema> {3, x?:1,  y?:1}
+schema> {x?:1,  y?:1}
 {}
 {x:1}
 {y:1}
@@ -91,11 +91,11 @@ schema> {3, x?:1,  y?:1}
 
 ### Auto field:
 ```
-schema> {3, money}   // auto convert to {3, money: money}
+schema> {money}   // auto convert to {money: money}
 {money: 'usd'}
 {money: 'eur'}
 
-schema> {3, money?}   // auto convert to {3, money?: money}
+schema> {money?}   // auto and optional
 {}
 {money: 'usd'}
 {money: 'eur'}
