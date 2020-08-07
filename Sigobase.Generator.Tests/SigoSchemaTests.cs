@@ -13,44 +13,100 @@ namespace Sigobase.Generator.Tests {
             return values.Select(Sigo.From).ToList();
         }
 
-        [Fact]
-        public void ValueTest() {
-            Utils.Equal(Leafs(false), Gen("false"));
-            Utils.Equal(Leafs(true), Gen("true"));
-            Utils.Equal(Leafs(123), Gen("123"));
-            Utils.Equal(Leafs("abc"), Gen("'abc'"));
+        [Theory]
+        [InlineData("{1;}", "{1}")]
+        [InlineData("{1,}", "{1}")]
+        [InlineData("{1,x:1,}", "{1, x:1}")]
+        [InlineData("{1;x:1;}", "{1, x:1}")]
+        [InlineData("{1 x:1 }", "{1, x:1}")]
+        [InlineData("{x:1;y:1;}", "{x:1, y:1}")]
+        [InlineData("{x:1,y:1,}", "{x:1, y:1}")]
+        [InlineData("{x:1 y:1 }", "{x:1, y:1}")]
+        public void Object_separator_field(string a, string b) {
+            var sa = SigoSchema.Parse(a);
+            var sb = SigoSchema.Parse(b);
+            Assert.Equal(sa.Count(), sb.Count());
+        }
+
+        [Theory]
+        [InlineData("{?;}", "{?}")]
+        [InlineData("{?,}", "{?}")]
+        [InlineData("{?,x:1,}", "{?, x:1}")]
+        [InlineData("{?;x:1;}", "{?, x:1}")]
+        [InlineData("{? x:1 }", "{?, x:1}")]
+        [InlineData("x=1; {x?,}", "x=1; {x?}")]
+        [InlineData("x=1; {x?;}", "x=1; {x?}")]
+        [InlineData("x=1; {x? }", "x=1; {x?}")]
+        public void Object_separator_flag(string a, string b) {
+            var sa = SigoSchema.Parse(a);
+            var sb = SigoSchema.Parse(b);
+            Assert.Equal(sa.Count(), sb.Count());
+        }
+
+        [Theory]
+        [InlineData("x=1 x")]
+        [InlineData("x=1;x")]
+        [InlineData("x=1;x;")]
+        [InlineData("x=2; x=1; x; x")]
+        public void Statements_separator(string a) {
+            Assert.Equal(Leafs(1), Gen(a));
         }
 
         [Fact]
-        public void ListTest() {
+        public void List_() {
             var expected = Leafs(false, true, 123, "abc");
 
-            Utils.Equal(expected, Gen(" false | true | 123 | 'abc' "));
+            Assert.Equal(expected, Gen(" false | true | 123 | 'abc' "));
         }
 
         [Fact]
-        public void Flag_037() {
+        public void Object_field_() {
+            var expected = new[] {
+                Sigo.Create(3, "x", 1),
+                Sigo.Create(3, "x", 2),
+                Sigo.Create(3, "x", 3)
+            };
+
+            Assert.Equal(expected, Gen("{x: 1|2|3}"));
+        }
+
+        [Fact]
+        public void Object_field_auto() {
+            var expected = new[] {
+                Sigo.Create(3, "money", "USD"),
+                Sigo.Create(3, "money", "VND")
+            };
+
+            Gen("money='USD'|'VND'");
+
+            Assert.Equal(expected, Gen("{money}"));
+        }
+
+        [Fact]
+        public void Object_field_optional() {
+            var expected = new[] {
+                Sigo.Create(3),
+                Sigo.Create(3, "x", 1),
+                Sigo.Create(3, "y", 1),
+                Sigo.Create(3, "x", 1, "y", 1)
+            };
+
+            Assert.Equal(expected, Gen("{x?: 1, y?:1}"));
+        }
+
+        [Fact]
+        public void Object_flag_() {
             var expected = new[] {
                 Sigo.Create(0),
                 Sigo.Create(3),
-                Sigo.Create(7),
-
+                Sigo.Create(7)
             };
 
-            Utils.Equal(expected, Gen("{037}"));
+            Assert.Equal(expected, Gen("{037}"));
         }
 
         [Fact]
-        public void Flag_default_is_3() {
-            var expected = new[] {
-                Sigo.Create(3)
-            };
-
-            Utils.Equal(expected, Gen("{ }"));
-        }
-
-        [Fact]
-        public void Flag_question_is_01234567() {
+        public void Object_flag_any() {
             var expected = new[] {
                 Sigo.Create(0),
                 Sigo.Create(1),
@@ -62,61 +118,21 @@ namespace Sigobase.Generator.Tests {
                 Sigo.Create(7)
             };
 
-            Utils.Equal(expected, Gen("{?}"));
+            Assert.Equal(expected, Gen("{?}"));
         }
 
         [Fact]
-        public void FieldTest() {
+        public void Object_flag_default() {
             var expected = new[] {
-                Sigo.Create(3, "x", 1),
-                Sigo.Create(3, "x", 2),
-                Sigo.Create(3, "x", 3)
+                Sigo.Create(3)
             };
 
-            Utils.Equal(expected, Gen("{x: 1|2|3}"));
+            Assert.Equal(expected, Gen("{ }"));
         }
 
         [Fact]
-        public void Field_optional_test() {
-            var expected = new[] {
-                Sigo.Create(3),
-                Sigo.Create(3, "x", 1),
-                Sigo.Create(3, "y", 1),
-                Sigo.Create(3, "x", 1, "y", 1)
-            };
-
-            Utils.Equal(expected, Gen("{x?: 1, y?:1}"));
-        }
-
-        [Fact]
-        public void Field_auto_test() {
-            var expected = new[] {
-                Sigo.Create(3, "money", "USD"),
-                Sigo.Create(3, "money", "VND")
-            };
-
-            Gen("money='USD'|'VND'");
-
-            Utils.Equal(expected, Gen("{money}"));
-        }
-
-        [Fact]
-        public void Assignment_and_reuse() {
-            Gen("money='USD'|'VND'");
-
-            Assert.Equal(2, SigoSchema.Context["money"].Count());
-
-            Utils.Equal(Leafs("bitcoin", "USD", "VND"), Gen("'bitcoin' | money"));
-        }
-
-        [Fact]
-        public void Assignment_return_empty() {
-            Utils.Equal(Leafs(), Gen("money='USD'|'VND'"));
-        }
-
-        [Fact]
-        public void Multiple_statements() {
-            var src = "number=1|2; string='aa'|'bb';  number|string";
+        public void Statements() {
+            var src = "number=1|2; string='aa'|'bb'; 'ok'; number|string";
 
             var expected = new[] {
                 Sigo.From(1),
@@ -125,57 +141,34 @@ namespace Sigobase.Generator.Tests {
                 Sigo.From("bb")
             };
 
-            Utils.Equal(expected, Gen(src));
+            Assert.Equal(expected, Gen(src));
         }
-
-        [Theory]
-        [InlineData("{1;}", "{1}")]
-        [InlineData("{1,}", "{1}")]
-
-        [InlineData("{1,x:1,}", "{1, x:1}")]
-        [InlineData("{1;x:1;}", "{1, x:1}")]
-        [InlineData("{1 x:1 }", "{1, x:1}")]
-
-        [InlineData("{x:1;y:1;}", "{x:1, y:1}")]
-        [InlineData("{x:1,y:1,}", "{x:1, y:1}")]
-        [InlineData("{x:1 y:1 }", "{x:1, y:1}")]
-        public void OptionalSeparator(string a, string b) {
-            var sa = SigoSchema.Parse(a);
-            var sb = SigoSchema.Parse(b);
-            Assert.Equal(sa.Count(), sb.Count());
-        }
-
-        [Theory]
-        [InlineData("{?;}", "{?}")]
-        [InlineData("{?,}", "{?}")]
-
-        [InlineData("{?,x:1,}", "{?, x:1}")]
-        [InlineData("{?;x:1;}", "{?, x:1}")]
-        [InlineData("{? x:1 }", "{?, x:1}")]
-
-        [InlineData("x=1; {x?,}", "x=1; {x?}")]
-        [InlineData("x=1; {x?;}", "x=1; {x?}")]
-        [InlineData("x=1; {x? }", "x=1; {x?}")]
-        public void OptionalSeparatorWithQuestion(string a, string b) {
-            var sa = SigoSchema.Parse(a);
-            var sb = SigoSchema.Parse(b);
-            Assert.Equal(sa.Count(), sb.Count());
-        }
-
-        [Theory]
-        [InlineData("x=1|2 x", "x=1|2; x")]
-        public void OptionalSemiconlon(string a, string b) {
-            var sa = SigoSchema.Parse(a);
-            var sb = SigoSchema.Parse(b);
-            Assert.Equal(sa.Count(), sb.Count());
-        }
-
 
         [Fact]
-        public void TODO_bug_multiple_values() {
-            var two = SigoSchema.Parse("1; 2");
+        public void Value_() {
+            Assert.Equal(Leafs(false), Gen("false"));
+            Assert.Equal(Leafs(true), Gen("true"));
+            Assert.Equal(Leafs(123), Gen("123"));
+            Assert.Equal(Leafs("abc"), Gen("'abc'"));
+        }
 
-            Utils.Equal(new []{Sigo.From(2)}, two.Generate());
+        [Fact]
+        public void Var_get_() {
+            Gen("money='USD'|'VND'");
+
+            Assert.Equal(Leafs("bitcoin", "USD", "VND"), Gen("'bitcoin' | money"));
+        }
+
+        [Fact]
+        public void Var_set_() {
+            Gen("money='USD'|'VND'");
+
+            Assert.Equal(2, SigoSchema.Context["money"].Count());
+        }
+
+        [Fact]
+        public void Var_set_return_empty() {
+            Assert.Equal(Leafs(), Gen("money='USD'|'VND'"));
         }
     }
 }

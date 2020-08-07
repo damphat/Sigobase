@@ -2,14 +2,15 @@
 using Xunit;
 
 namespace Sigobase.Generator.Tests {
-    public class UtilsTests {
+
+    public class SigoAssertTests {
         [Fact]
         public void ShouldEqual() {
             var a1 = Sigo.From(1);
             var a2 = Sigo.From(1);
 
             Assert.Equal(a1, a2);
-            Utils.Equal(new[] {a1, a2}, new[] {a2, a1});
+            Assert.Equal(new[] {a1, a2}, new[] {a2, a1});
         }
 
         [Fact]
@@ -19,11 +20,11 @@ namespace Sigobase.Generator.Tests {
 
             Assert.NotEqual(a, b);
 
-            Utils.NotEqual(new[] {a}, new[] {b});
-            Utils.NotEqual(new[] {a}, new[] {b});
+            Assert.NotEqual(new[] {a}, new[] {b});
+            Assert.NotEqual(new[] {a}, new[] {b});
 
-            Utils.NotEqual(new[] {b, a}, new[] {b});
-            Utils.NotEqual(new[] {a}, new[] {a, b});
+            Assert.NotEqual(new[] {b, a}, new[] {b});
+            Assert.NotEqual(new[] {a}, new[] {a, b});
         }
     }
 }
