@@ -63,15 +63,15 @@ namespace Sigobase.Language.Tests {
             Assert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
         }
 
-        [Theory ()]
+        [Theory (Skip = "TODO")]
         [InlineData("true")]
         [InlineData("false")]
         [InlineData("Infinity")]
         [InlineData("NaN")]
         [InlineData("123")]
         [InlineData("'abc'")]
-        public void TODO_Assign_to_literal(string variableName) {
-            Assert.ThrowsAny<Exception>(() => Sigo.Parse(variableName + " = 1"));
+        public void TODO_Assign_to_literal(string name) {
+            Assert.ThrowsAny<Exception>(() => Sigo.Parse(name + " = 1"));
         }
 
         [Theory]
