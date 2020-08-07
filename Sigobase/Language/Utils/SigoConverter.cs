@@ -1,14 +1,13 @@
-﻿using System.Globalization;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Globalization;
 
 namespace Sigobase.Language.Utils {
     internal static class SigoConverter {
         /// <summary>
-        /// Convert a hex-digit to int 0..15
-        /// Return -1 if input is not a hex-digit
+        ///     Convert a hex-digit to int 0..15
+        ///     Return -1 if input is not a hex-digit
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Hex2Int(char c) {
+        public static int TryConvertHexChar2Int(char c) {
             if (c >= '0' && c <= '9') {
                 return c - '0';
             }
@@ -24,8 +23,26 @@ namespace Sigobase.Language.Utils {
             return -1;
         }
 
-        // FIXME ToDouble("1e1000") may throw OverflowException, or return Infinity
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <summary>
+        /// convert 0..15 to hex char or throw ArgumentOutOfRangeException
+        /// </summary>
+        public static char Int2HexChar(int n) {
+            if (n >= 0) {
+                if (n < 10) {
+                    return (char) ('0' + n);
+                }
+
+                if (n < 16) {
+                    return (char) ('a' - 10 + n);
+                }
+            }
+
+            throw new ArgumentOutOfRangeException();
+        }
+
+        // FIXME ToDouble("1e1000") got different result
+        // - .NET Framework throws OverflowException
+        // - .NET Core return Infinity
         public static double ToDouble(string str) {
             return double.Parse(str, CultureInfo.InvariantCulture);
         }
