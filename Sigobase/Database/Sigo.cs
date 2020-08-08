@@ -71,11 +71,11 @@ namespace Sigobase.Database {
         }
 
         public static ISigo Parse(string src) {
-            return new SigoParser(src).Parse();
+            return SigoParser.Create(src).Parse();
         }
 
         public static ISigo Parse(string src, ISigo input, out ISigo output) {
-            return new SigoParser(src).Parse(input, out output);
+            return SigoParser.Create(src).Parse(input, out output);
         }
     }
 }
