@@ -1,7 +1,0 @@
-language: csharp
-solution: Sigobase.sln
-mono: none
-dotnet: 3.1
-script:
-  - dotnet restore
-  - dotnet test
