@@ -7,7 +7,7 @@ on:
     
 jobs:
   sona:
-    runs-on: windows-lasted
+    runs-on: windows-latest
     steps:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.3
