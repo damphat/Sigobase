@@ -1,2 +1,13 @@
-- name: SonarCloud Scan
-  uses: SonarSource/sonarcloud-github-action@v1.3
+name: SonarCloud Scan
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+    
+jobs:
+  sona:
+    runs-on: windows-lasted
+    steps:
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.3
