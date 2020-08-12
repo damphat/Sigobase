@@ -7,6 +7,22 @@ using Xunit;
 namespace Sigobase.Tests.Language {
     public class LexerTests {
         [Theory]
+        [InlineData(" ' ")]
+        [InlineData(" 'xxx ")]
+        [InlineData(" '1\n2' ")]
+        [InlineData(" '1\r2' ")]
+        [InlineData(" '\\u' ")]
+        [InlineData(" '\\u1' ")]
+        [InlineData(" '\\u12' ")]
+        [InlineData(" '\\u123' ")]
+        [InlineData(" '\\u123z' ")]
+        public void ThrowLexerException(string src) {
+            var lexer = new Lexer(src);
+            
+            Assert.Throws<LexerException>(() => lexer.Read(null));
+        }
+
+        [Theory]
         [InlineData("0", 0.0)]
         [InlineData("909", 909)]
         [InlineData("1.5", 1.5)]
