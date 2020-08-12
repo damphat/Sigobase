@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Sigobase.Database;
 using Sigobase.Language.Utils;
 
 namespace Sigobase.Language {
-    public class SigoParserV2 : SigoParser {
+    internal class SigoParserV2 : SigoParser {
+        private ISigo context = Sigo.Create(0);
         private readonly PeekableLexer lexer;
         private Token t;
 
@@ -13,20 +13,20 @@ namespace Sigobase.Language {
             t = lexer.Peek(0);
         }
 
-        void Next() {
+        private void Next() {
             lexer.Move(1);
             t = lexer.Peek(0);
         }
 
-        private Exception Expect(string what) {
-            return new Exception($"{what} expected");
+        private ParserException Expect(string what) {
+            return new ParserException($"{what} expected, found {t.Raw} at {t.Start}");
         }
 
-        bool Eof() {
+        private bool Eof() {
             return t.Kind == Kind.Eof;
         }
 
-        void Require(Kind kind) {
+        private void Require(Kind kind) {
             if (t.Kind != kind) {
                 Next();
                 throw Expect(kind.ToString());
@@ -213,54 +213,32 @@ namespace Sigobase.Language {
             }
         }
 
-        /// <summary>
-        /// TODO
-        /// expr : tong
-        /// tong : tich ( ('+'|'-') tich)*
-        /// tich : hang ( ('*' | '/') hang) *
-        /// hang : ('+' | '-') hang
-        ///      | '(' expr ')'
-        ///      | number
-        ///      | identifier
-        /// </summary>
+
         public object Expr() {
             return Tong();
         }
 
-        /// <summary>
-        /// program: eof
-        ///        | loop
-        /// 
-        /// loop   : expr eof
-        ///        | expr ';' eof 
-        ///        | expr ';' loop
-        ///        | expr Expect(';')
-        /// </summary>
-        private object Program() {
-            bool ExprSep() {
-                if (t.Kind == Kind.SemiColon) {
-                    Next();
-                    return true;
-                }
-
-                return false;
+        bool ExprSep() {
+            if (t.Kind == Kind.SemiColon) {
+                Next();
+                return true;
             }
 
+            return false;
+        }
+
+        private object Program() {
             object last = Sigo.Create(0);
             if (Eof()) return last;
 
-            // loop
             while (true) {
                 last = Expr();
                 if (Eof()) return last;
                 if (ExprSep()) {
                     if (Eof()) return last;
-                    else {
-                        /*loop*/
-                    }
-                } else {
-                    throw Expect("';'");
+                    continue;
                 }
+                throw Expect("';'");
             }
         }
 
@@ -269,8 +247,11 @@ namespace Sigobase.Language {
         }
 
         public override ISigo Parse(ISigo input, out ISigo output) {
-            output = input ?? Sigo.Create(0);
-            return Parse();
+            input = input ?? Sigo.Create(0);
+            input.Freeze();
+            var ret = Parse();
+            output = input;
+            return ret;
         }
     }
 }
