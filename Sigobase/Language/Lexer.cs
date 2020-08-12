@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Sigobase.Language.Utils;
 
 namespace Sigobase.Language {
@@ -14,6 +13,10 @@ namespace Sigobase.Language {
         private char c;
         private char quote;
         private readonly StringBuilder sb = new StringBuilder();
+
+        private LexerException Error(string msg) {
+            return new LexerException(msg);
+        }
 
         public Lexer(string src) {
             this.src = src;
@@ -188,8 +191,9 @@ namespace Sigobase.Language {
             return CreateToken(kind);
         }
 
-        // Does not include sign, Infinity, NaN, which are concepted in parser
-        // 1E1000 => -Infinity (netcore vs net framework)
+        // Start with number (not '-' | '+' | '.')
+        // Not include Infinity, NaN (these are returned as identifiers)
+        // 1E1000 => Infinity (netcore vs net framework)
         // TODO parse 1_000
         // TODO parse 0xffff
         private Token NumberToken() {
@@ -223,7 +227,6 @@ namespace Sigobase.Language {
                     Next();
                 }
             }
-
             var value = SigoConverter.ToDouble(src.Substring(start, end - start));
 
             return CreateToken(Kind.Number, value);
@@ -233,7 +236,7 @@ namespace Sigobase.Language {
             Next();
             switch (c) {
                 case Eof:
-                    throw new Exception("UnterminatedStringLiteral");
+                    throw Error("UnterminatedStringLiteral");
                 case '\r':
                     Next();
                     if (c == '\n') {
@@ -294,7 +297,7 @@ namespace Sigobase.Language {
                     if (i == 4) {
                         sb.Append((char) u);
                     } else {
-                        throw new Exception("HexadecimalDigitExpected");
+                        throw Error("HexadecimalDigitExpected");
                     }
 
                     break;
@@ -316,7 +319,7 @@ namespace Sigobase.Language {
                     case Eof:
                     case '\r':
                     case '\n':
-                        throw new Exception("UnterminatedStringLiteral");
+                        throw Error("UnterminatedStringLiteral");
                     case '"':
                     case '\'':
                         if (c == quote) {
