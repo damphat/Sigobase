@@ -85,7 +85,7 @@ namespace Sigobase.Language {
 
         public PathStack Pop() {
             if (stack.Count == 0) {
-                throw new Exception("No thing to pop");
+                throw new InvalidOperationException("Nothing to pop");
             }
 
             End = Start;
@@ -165,7 +165,7 @@ namespace Sigobase.Language {
         }
 
         public override int GetHashCode() {
-            throw new NotImplementedException("")
+            throw new NotImplementedException("");
         }
     }
 }
