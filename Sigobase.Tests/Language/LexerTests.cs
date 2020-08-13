@@ -7,19 +7,24 @@ using Xunit;
 namespace Sigobase.Tests.Language {
     public class LexerTests {
         [Theory]
-        [InlineData(" ' ")]
-        [InlineData(" 'xxx ")]
-        [InlineData(" '1\n2' ")]
-        [InlineData(" '1\r2' ")]
-        [InlineData(" '\\u' ")]
-        [InlineData(" '\\u1' ")]
-        [InlineData(" '\\u12' ")]
-        [InlineData(" '\\u123' ")]
-        [InlineData(" '\\u123z' ")]
-        public void ThrowLexerException(string src) {
+        [InlineData(" ' ", " ", TokenErrorKind.UnterminatedStringLiteral)]
+        [InlineData(" 'xxx ", "xxx ", TokenErrorKind.UnterminatedStringLiteral)]
+        [InlineData(" '1\n2' ", "1", TokenErrorKind.UnterminatedStringLiteral)]
+        [InlineData(" '1\r2' ", "1", TokenErrorKind.UnterminatedStringLiteral)]
+        [InlineData(" '\\u' ", "", TokenErrorKind.HexadecimalDigitExpected)]
+        [InlineData(" '\\u1' ", "", TokenErrorKind.HexadecimalDigitExpected)]
+        [InlineData(" '\\u12' ", "", TokenErrorKind.HexadecimalDigitExpected)]
+        [InlineData(" '\\u123' ", "", TokenErrorKind.HexadecimalDigitExpected)]
+        [InlineData(" '\\u123z' ", "z", TokenErrorKind.HexadecimalDigitExpected)]
+        public void ReturnTokensContainErrors(string src, string expect, TokenErrorKind errorKind) {
             var lexer = new Lexer(src);
+            var token = lexer.Read(null);
             
-            Assert.Throws<LexerException>(() => lexer.Read(null));
+            Assert.Equal(Kind.String, token.Kind);
+            Assert.Equal(expect, token.Value);
+            Assert.NotNull(token.Errors);
+            Assert.Equal(errorKind, token.Errors[0].Kind);
+
         }
 
         [Theory]

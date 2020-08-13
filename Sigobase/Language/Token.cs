@@ -1,14 +1,17 @@
-﻿namespace Sigobase.Language {
+﻿using System.Collections.Generic;
+
+namespace Sigobase.Language {
     public class Token {
         private string raw;
 
-        public Token(Kind kind, string src, int start, int end, int separator, object value = null) {
+        public Token(Kind kind, string src, int start, int end, int separator, object value = null, IList<TokenError> errors = null) {
             Kind = kind;
             Src = src;
             Start = start;
             End = end;
             Separator = separator;
             Value = value;
+            Errors = errors;
         }
 
         public Kind Kind { get; private set; }
@@ -16,6 +19,7 @@
         public int Start { get; private set; }
         public int End { get; private set; }
         public int Separator { get; private set; }
+        public IList<TokenError> Errors { get; private set; }
 
         public string Raw => raw = raw ?? Src.Substring(Start, End - Start);
 
@@ -25,7 +29,7 @@
             return $"{Kind}:'{Raw}'";
         }
 
-        public void Reset(Kind kind, string src, in int start, in int end, in int separator, object value = null) {
+        public void Reset(Kind kind, string src, in int start, in int end, in int separator, object value = null, IList<TokenError> errors = null) {
             Kind = kind;
             Src = src;
             Start = start;
@@ -33,6 +37,7 @@
             Separator = separator;
             Value = value;
             raw = null;
+            Errors = errors;
         }
     }
 }
