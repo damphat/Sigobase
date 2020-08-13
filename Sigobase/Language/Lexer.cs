@@ -1,22 +1,26 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Sigobase.Language.Utils;
 
 namespace Sigobase.Language {
+    public enum TokenErrorKind {
+        None,
+        UnterminatedStringLiteral,
+        HexadecimalDigitExpected
+    }
+
     public class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;
         private int start;
         private int end;
         private int separator;
+        private List<TokenError> errors;
         private Token token;
 
         private char c;
         private char quote;
         private readonly StringBuilder sb = new StringBuilder();
-
-        private LexerException Error(string msg) {
-            return new LexerException(msg);
-        }
 
         public Lexer(string src) {
             this.src = src;
@@ -164,10 +168,12 @@ namespace Sigobase.Language {
         }
 
         private Token CreateToken(Kind kind, object value = null) {
+            var e = this.errors;
+            this.errors = null;
             if (token == null) {
-                return new Token(kind, src, start, end, separator, value);
+                return new Token(kind, src, start, end, separator, value, e);
             } else {
-                token.Reset(kind, src, start, end, separator, value);
+                token.Reset(kind, src, start, end, separator, value, e);
                 return token;
             }
         }
@@ -232,80 +238,11 @@ namespace Sigobase.Language {
             return CreateToken(Kind.Number, value);
         }
 
-        private void ScanStringEscape() {
-            Next();
-            switch (c) {
-                case Eof:
-                    throw Error("UnterminatedStringLiteral");
-                case '\r':
-                    Next();
-                    if (c == '\n') {
-                        Next();
-                    }
-
-                    break;
-                case '\n':
-                    Next();
-                    break;
-
-                case '\\':
-                case '"':
-                case '\'':
-                    sb.Append(c);
-                    Next();
-                    break;
-
-                case 'b':
-                    sb.Append('\b');
-                    Next();
-                    break;
-
-                case 'f':
-                    sb.Append('\f');
-                    Next();
-                    break;
-
-                case 'r':
-                    sb.Append('\r');
-                    Next();
-                    break;
-
-                case 'n':
-                    sb.Append('\n');
-                    Next();
-                    break;
-
-                case 't':
-                    sb.Append('\t');
-                    Next();
-                    break;
-
-                case 'u':
-                    Next();
-                    var u = 0;
-                    var i = 0;
-                    for (; i < 4; i++) {
-                        var h = SigoConverter.TryConvertHexChar2Int(c);
-                        if (h >= 0) {
-                            Next();
-                            u = u * 16 + h;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    if (i == 4) {
-                        sb.Append((char) u);
-                    } else {
-                        throw Error("HexadecimalDigitExpected");
-                    }
-
-                    break;
-                default: // /c
-                    sb.Append(c); // warning unknown escape
-                    Next();
-                    break;
-            } // switch (the letter after \)
+        private void AddError(TokenErrorKind kind, int at) {
+            if (errors == null) {
+                errors = new List<TokenError>();
+            }
+            errors.Add(new TokenError(kind, at));
         }
 
         private Token StringToken() {
@@ -319,7 +256,8 @@ namespace Sigobase.Language {
                     case Eof:
                     case '\r':
                     case '\n':
-                        throw Error("UnterminatedStringLiteral");
+                        AddError(TokenErrorKind.UnterminatedStringLiteral, end);
+                        return CreateToken(Kind.String, sb.ToString()); // Error
                     case '"':
                     case '\'':
                         if (c == quote) {
@@ -331,7 +269,86 @@ namespace Sigobase.Language {
                             continue;
                         }
                     case '\\':
-                        ScanStringEscape();
+                        // {{
+
+                        Next();
+                        switch (c) {
+                            case Eof:
+                                AddError(TokenErrorKind.UnterminatedStringLiteral, end);
+                                return CreateToken(Kind.String, sb.ToString());
+                            case '\r':
+                                Next();
+                                if (c == '\n') {
+                                    Next();
+                                }
+
+                                break;
+                            case '\n':
+                                Next();
+                                break;
+
+                            case '\\':
+                            case '"':
+                            case '\'':
+                                sb.Append(c);
+                                Next();
+                                break;
+
+                            case 'b':
+                                sb.Append('\b');
+                                Next();
+                                break;
+
+                            case 'f':
+                                sb.Append('\f');
+                                Next();
+                                break;
+
+                            case 'r':
+                                sb.Append('\r');
+                                Next();
+                                break;
+
+                            case 'n':
+                                sb.Append('\n');
+                                Next();
+                                break;
+
+                            case 't':
+                                sb.Append('\t');
+                                Next();
+                                break;
+
+                            case 'u':
+                                Next();
+                                var u = 0;
+                                var i = 0;
+                                for (; i < 4; i++) {
+                                    var h = SigoConverter.TryConvertHexChar2Int(c);
+                                    if (h >= 0) {
+                                        Next();
+                                        u = u * 16 + h;
+                                    } else {
+                                        break;
+                                    }
+                                }
+
+                                if (i == 4) {
+                                    sb.Append((char)u);
+                                } else {
+                                    AddError(TokenErrorKind.HexadecimalDigitExpected, end);
+                                }
+
+                                break;
+                            default: // /c
+                                sb.Append(c); // warning unknown escape
+                                Next();
+                                break;
+                        } // switch (the letter after \)
+
+                        //return TokenErrorKind.None;
+
+                        // }}
                         break;
 
                     default:
