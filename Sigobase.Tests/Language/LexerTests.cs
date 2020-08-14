@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sigobase.Language;
 using Xunit;
 
-namespace Sigobase.Language.Tests {
+namespace Sigobase.Tests.Language {
     public class LexerTests {
         [Theory]
         [InlineData("0", 0.0)]

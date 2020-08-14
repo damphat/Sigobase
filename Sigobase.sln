@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator", "Sigob
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator.REPL", "Sigobase.Generator.REPL\Sigobase.Generator.REPL.csproj", "{EEB12960-D80B-4E95-9C4E-8CE4255143E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Language.Tests", "Sigobase.Language.Tests\Sigobase.Language.Tests.csproj", "{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigobase.Generator.Tests", "Sigobase.Generator.Tests\Sigobase.Generator.Tests.csproj", "{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}"
 EndProject
 Global
@@ -45,10 +43,6 @@ Global
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEB12960-D80B-4E95-9C4E-8CE4255143E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CEF561BB-E2A9-4DC7-A4EA-3917B1C18651}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9FBCBCF-3AEE-48F6-B0C8-93B6570C1A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU

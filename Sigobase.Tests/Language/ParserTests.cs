@@ -6,7 +6,7 @@ using Sigobase.Database;
 using Sigobase.Generator;
 using Xunit;
 
-namespace Sigobase.Language.Tests {
+namespace Sigobase.Tests.Language {
     public class ParserTests {
         [Theory]
         [InlineData(" 1")]
@@ -63,7 +63,7 @@ namespace Sigobase.Language.Tests {
             Assert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
         }
 
-        [Theory (Skip = "TODO")]
+        [Theory(Skip = "TODO")]
         [InlineData("true")]
         [InlineData("false")]
         [InlineData("Infinity")]
@@ -113,7 +113,7 @@ namespace Sigobase.Language.Tests {
         [Theory]
         [InlineData("[]", "{}")]
         [InlineData("[ ]", "{}")]
-        [InlineData("[0]",  "{0:0}")]
+        [InlineData("[0]", "{0:0}")]
         [InlineData("[0 ]", "{0:0}")]
         [InlineData("[0,]", "{0:0}")]
         [InlineData("[0;]", "{0:0}")]
@@ -172,7 +172,7 @@ namespace Sigobase.Language.Tests {
             Sigo.Parse("{name: 'Phat'} | {0, age: 10}");
         }
 
-        [Fact (Skip = "TODO")]
+        [Fact(Skip = "TODO")]
         public void TODO_SelectTest() {
             Sigo.Parse("select{name:{first, last}, friends:{0, 2, 4}}");
         }

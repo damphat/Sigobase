@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sigobase.Database;
 
 namespace Sigobase.Tests {
+
     public static class Assert {
         public static readonly IEqualityComparer<ISigo> Comparer = new SigoComparer();
 
