@@ -3,12 +3,6 @@ using System.Text;
 using Sigobase.Language.Utils;
 
 namespace Sigobase.Language {
-    public enum TokenErrorKind {
-        None,
-        UnterminatedStringLiteral,
-        HexadecimalDigitExpected
-    }
-
     public class Lexer {
         private const char Eof = char.MaxValue;
         private readonly string src;

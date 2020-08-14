@@ -20,8 +20,31 @@ namespace Sigobase.Language {
             t = lexer.Peek(0);
         }
 
+
+        private static string KindToString(Kind kind) {
+            switch (kind) {
+                case Kind.Open: return "'{'";
+                case Kind.Close: return "'}'";
+                case Kind.OpenBracket: return "'['";
+                case Kind.CloseBracket: return "']'";
+                case Kind.OpenParens: return "'('";
+                case Kind.CloseParens: return "')'";
+                case Kind.Comma: return "','";
+                case Kind.Colon: return "':'";
+                case Kind.SemiColon: return "';'";
+                default: return kind.ToString();
+            }
+        }
+        private ParserException Expect(Kind kind) {
+            return Expect(KindToString(kind));
+        }
+
         private ParserException Expect(string what) {
-            return new ParserException($"{what} expected, found {t.Raw} at {t.Start}");
+            if (t.Kind == Kind.Eof) {
+                return new ParserException($"{what} expected at {t.Start}. Unexpected end of input");
+            } else {
+                return new ParserException($"{what} expected, found '{t.Raw}' at {t.Start}");
+            }
         }
 
         private bool Eof() {
@@ -30,15 +53,23 @@ namespace Sigobase.Language {
 
         private void Require(Kind kind) {
             if (t.Kind != kind) {
-                Next();
-                throw Expect(kind.ToString());
+                throw Expect(kind);
             }
 
             Next();
         }
 
-        private Kind ReadKind() {
+        private Kind EatKind() {
             var ret = t.Kind;
+            Next();
+            return ret;
+        }
+
+        private object EatValue() {
+            if (t.Errors != null) {
+                throw new ParserException($"{t.Errors[0].Kind.ToStringEx()} at {t.Errors[0].At}" );
+            }
+            var ret = t.Value;
             Next();
             return ret;
         }
@@ -50,7 +81,7 @@ namespace Sigobase.Language {
 
         public object Factor() {
             object Parens() {
-                Next(); // Require(Kind.OpenBracket);
+                Next();
                 var expr = Expr();
                 Require(Kind.CloseParens);
                 return expr;
@@ -58,25 +89,27 @@ namespace Sigobase.Language {
 
             switch (t.Kind) {
                 case Kind.Minus:
-                case Kind.Plus: return Operators.Unary(ReadKind(), Factor());
-                case Kind.Number: return Eat(t.Value);
-                case Kind.String: return Eat(t.Value);
+                case Kind.Plus: return Operators.Unary(EatKind(), Factor());
+                case Kind.Number: return EatValue();
+                case Kind.String: return EatValue();
                 case Kind.Identifier:
                     switch (t.Raw) {
                         case "true": return Eat(true);
                         case "false": return Eat(false);
                         case "Infinity": return Eat(double.PositiveInfinity);
                         case "NaN": return Eat(double.NaN);
-                        default: return Eat(t.Raw);
+                        default: return context.Get1((string)Eat(t.Raw));
                     }
                 case Kind.OpenParens: return Parens();
                 case Kind.OpenBracket: return ParseArray();
                 case Kind.Open: return ParseObject();
                 default:
-                    throw Expect("factor");
+                    throw Expect("value");
             }
         }
 
+
+        // for both array and object
         private bool Sep() {
             if (t.Kind == Kind.Comma || t.Kind == Kind.SemiColon) {
                 Next();
@@ -123,13 +156,13 @@ namespace Sigobase.Language {
         private void ReadKey() {
             switch (t.Kind) {
                 case Kind.String:
-                    path.Add((string) Eat(t.Value));
+                    path.Add((string) EatValue());
                     break;
                 case Kind.Identifier:
                     path.Add1((string) Eat(t.Raw));
                     break;
                 case Kind.Number:
-                    path.Add1(Operators.ToStr((double) Eat(t.Value)));
+                    path.Add1(Operators.ToStr((double) EatValue()));
                     break;
                 default:
                     throw Expect("key");
@@ -235,7 +268,7 @@ namespace Sigobase.Language {
                 switch (t.Kind) {
                     case Kind.Mul:
                     case Kind.Div:
-                        factor = Operators.Binary(ReadKind(), factor, Factor());
+                        factor = Operators.Binary(EatKind(), factor, Factor());
                         break;
                     default:
                         return factor;
@@ -244,33 +277,47 @@ namespace Sigobase.Language {
         }
 
         public object AdditiveExpr() {
-            var tong = MultiplicativeExpr();
+            var ret = MultiplicativeExpr();
             while (true) {
                 switch (t.Kind) {
                     case Kind.Plus:
                     case Kind.Minus:
-                        tong = Operators.Binary(ReadKind(), tong, MultiplicativeExpr());
+                        ret = Operators.Binary(EatKind(), ret, MultiplicativeExpr());
                         break;
                     default:
-                        return tong;
+                        return ret;
                 }
             }
         }
 
-        public object Expr() {
+        private object AssignExpr() {
+            var key = t.Raw;
+            Next();
+            Next();
+            var value = Expr();
+            context = context.Set1(key, Sigo.From(value));
+            return value;
+        }
+
+        private object Expr() {
+            if (t.Kind == Kind.Identifier) {
+                if (lexer.Peek(1).Kind == Kind.Eq) {
+                    return AssignExpr();
+                }
+            }
             return AdditiveExpr();
         }
 
-        private bool ExprSep() {
-            if (t.Kind == Kind.SemiColon) {
-                Next();
-                return true;
+        private object Program() {
+            bool ExprSep() {
+                if (t.Kind == Kind.SemiColon) {
+                    Next();
+                    return true;
+                }
+
+                return false;
             }
 
-            return false;
-        }
-
-        private object Program() {
             object last = Sigo.Create(0);
             if (Eof()) {
                 return last;
@@ -299,10 +346,10 @@ namespace Sigobase.Language {
         }
 
         public override ISigo Parse(ISigo input, out ISigo output) {
-            input = input ?? Sigo.Create(0);
-            input.Freeze();
+            context = input ?? Sigo.Create(0);
+            context.Freeze();
             var ret = Parse();
-            output = input;
+            output = context;
             return ret;
         }
     }
