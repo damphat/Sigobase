@@ -20,7 +20,6 @@ namespace Sigobase.Language {
             t = lexer.Peek(0);
         }
 
-
         private static string KindToString(Kind kind) {
             switch (kind) {
                 case Kind.Open: return "'{'";
@@ -35,6 +34,7 @@ namespace Sigobase.Language {
                 default: return kind.ToString();
             }
         }
+
         private ParserException Expect(Kind kind) {
             return Expect(KindToString(kind));
         }
@@ -67,8 +67,9 @@ namespace Sigobase.Language {
 
         private object EatValue() {
             if (t.Errors != null) {
-                throw new ParserException($"{t.Errors[0].Kind.ToStringEx()} at {t.Errors[0].At}" );
+                throw new ParserException($"{t.Errors[0].Kind.ToStringEx()} at {t.Errors[0].At}");
             }
+
             var ret = t.Value;
             Next();
             return ret;
@@ -98,7 +99,7 @@ namespace Sigobase.Language {
                         case "false": return Eat(false);
                         case "Infinity": return Eat(double.PositiveInfinity);
                         case "NaN": return Eat(double.NaN);
-                        default: return context.Get1((string)Eat(t.Raw));
+                        default: return context.Get1((string) Eat(t.Raw));
                     }
                 case Kind.OpenParens: return Parens();
                 case Kind.OpenBracket: return ParseArray();
@@ -107,7 +108,6 @@ namespace Sigobase.Language {
                     throw Expect("value");
             }
         }
-
 
         // for both array and object
         private bool Sep() {
@@ -305,6 +305,7 @@ namespace Sigobase.Language {
                     return AssignExpr();
                 }
             }
+
             return AdditiveExpr();
         }
 
