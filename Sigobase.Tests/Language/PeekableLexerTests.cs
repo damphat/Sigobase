@@ -1,10 +1,10 @@
 ﻿using System;
+using Sigobase.Language;
 using Xunit;
 
-namespace Sigobase.Language.Tests {
-
+namespace Sigobase.Tests.Language {
     public class PeekableLexerTests {
-        readonly PeekableLexer lexer = new PeekableLexer("0 1 2 3 4 5", -1, 2);
+        private readonly PeekableLexer lexer = new PeekableLexer("0 1 2 3 4 5", -1, 2);
 
         [Fact]
         public void PropertiesTest() {
@@ -28,8 +28,7 @@ namespace Sigobase.Language.Tests {
             Assert.ThrowsAny<Exception>(() => lexer.Peek(-1));
 
             // after move(-1) you have limitation
-            Assert.ThrowsAny<Exception>(() =>lexer.Move(-1));
-
+            Assert.ThrowsAny<Exception>(() => lexer.Move(-1));
         }
 
         [Fact]
@@ -48,9 +47,10 @@ namespace Sigobase.Language.Tests {
                         Assert.Equal(Kind.Eof, lexer.Peek(d).Kind);
                     } else {
                         // return the token
-                        Assert.Equal((i+d).ToString(), lexer.Peek(d).Raw);
+                        Assert.Equal((i + d).ToString(), lexer.Peek(d).Raw);
                     }
                 }
+
                 lexer.Move(1);
             }
         }
