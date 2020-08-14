@@ -54,6 +54,14 @@ namespace Sigobase.Language.Utils {
             }
         }
 
+        public static string ToStr(bool value) {
+            return value ? "true" : "false";
+        }
+
+        public static string ToStr(double value) {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
         public static string ToStr(object value) {
             switch (value) {
                 case null: return "null";
