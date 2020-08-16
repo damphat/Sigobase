@@ -26,8 +26,8 @@ namespace Sigobase.Tests.MergeTests {
                 "b", "b+"
             );
 
-            Assert.Equal(abc1, abc2);
-            Assert.Equal(expect, abc2);
+            SigoAssert.Equal(abc1, abc2);
+            SigoAssert.Equal(expect, abc2);
         }
     }
 }

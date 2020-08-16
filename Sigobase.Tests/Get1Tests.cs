@@ -18,10 +18,10 @@ namespace Sigobase.Tests {
             };
 
             foreach (var sigo in sigos) {
-                Assert.ThrowsAny<Exception>(() => sigo.Get1(null));
-                Assert.ThrowsAny<Exception>(() => sigo.Get1(""));
-                Assert.ThrowsAny<Exception>(() => sigo.Get1("/"));
-                Assert.ThrowsAny<Exception>(() => sigo.Get1("x/"));
+                SigoAssert.ThrowsAny<Exception>(() => sigo.Get1(null));
+                SigoAssert.ThrowsAny<Exception>(() => sigo.Get1(""));
+                SigoAssert.ThrowsAny<Exception>(() => sigo.Get1("/"));
+                SigoAssert.ThrowsAny<Exception>(() => sigo.Get1("x/"));
             }
         }
 
@@ -36,9 +36,9 @@ namespace Sigobase.Tests {
             };
             foreach (var sigo in sigos) {
                 if ((sigo.Flags & Bits.R) == Bits.R) {
-                    Assert.Equal(Sigo.Create(3), sigo.Get1("nonExists"));
+                    SigoAssert.Equal(Sigo.Create(3), sigo.Get1("nonExists"));
                 } else {
-                    Assert.Equal(Sigo.Create(0), sigo.Get1("nonExists"));
+                    SigoAssert.Equal(Sigo.Create(0), sigo.Get1("nonExists"));
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace Sigobase.Tests {
         public void Return_the_child() {
             var sigo = Sigo.Create(0).Set1("k", Sigo.From("v"));
 
-            Assert.Equal("v", sigo.Get1("k").Data);
+            SigoAssert.Equal("v", sigo.Get1("k").Data);
         }
     }
 }

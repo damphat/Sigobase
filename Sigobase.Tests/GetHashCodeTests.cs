@@ -26,10 +26,10 @@ namespace Sigobase.Tests {
                 foreach (var b in sigos) {
                     if (a.Equals(b)) {
                         // THIS IS A MUST
-                        Assert.Equal(Hash(a), Hash(b));
+                        SigoAssert.Equal(Hash(a), Hash(b));
                     } else {
                         // THIS IS A SHOULD
-                        Assert.NotEqual(Hash(a), Hash(b));
+                        SigoAssert.NotEqual(Hash(a), Hash(b));
                     }
                 }
             }
@@ -44,13 +44,13 @@ namespace Sigobase.Tests {
             };
 
             foreach (var a in list) {
-                Assert.Equal(Sigo.GetHashCode(a), a.GetHashCode());
+                SigoAssert.Equal(Sigo.GetHashCode(a), a.GetHashCode());
             }
         }
 
         [Fact]
         public void Ignore_frozen_bit() {
-            Assert.Equal(
+            SigoAssert.Equal(
                 Hash(Sigo.Create(0, "x", 1)),
                 Hash(Sigo.Create(0, "x", 1).Freeze())
             );
@@ -58,7 +58,7 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Null_return_0() {
-            Assert.Equal(0, Hash(null));
+            SigoAssert.Equal(0, Hash(null));
         }
 
         [Fact]

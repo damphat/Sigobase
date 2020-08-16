@@ -33,7 +33,7 @@ namespace Sigobase.Tests {
             foreach (var a in diffs) {
                 foreach (var b in diffs) {
                     if (!a.Same(b)) {
-                        Assert.NotEqual(a, b);
+                        SigoAssert.NotEqual(a, b);
                     }
                 }
             }
@@ -41,9 +41,9 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Leafs_compare_theirData() {
-            Assert.Equal(Sigo.From(10000), Sigo.From(10000));
-            Assert.Equal(Sigo.From(true), Sigo.From(true));
-            Assert.Equal(Sigo.From("abc"), Sigo.From("abc"));
+            SigoAssert.Equal(Sigo.From(10000), Sigo.From(10000));
+            SigoAssert.Equal(Sigo.From(true), Sigo.From(true));
+            SigoAssert.Equal(Sigo.From("abc"), Sigo.From("abc"));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Sigobase.Tests {
             var a = Sigo.Create(3, "k", "v");
             var b = Sigo.Create(0, "k", "v");
 
-            Assert.NotEqual(a, b);
+            SigoAssert.NotEqual(a, b);
         }
 
         [Fact]
@@ -60,26 +60,26 @@ namespace Sigobase.Tests {
             var b = Sigo.Create(0, "k", "v+");
             var c = Sigo.Create(0, "k", "v-");
 
-            Assert.Equal(a, b);
-            Assert.NotEqual(b, c);
+            SigoAssert.Equal(a, b);
+            SigoAssert.NotEqual(b, c);
         }
 
         [Fact]
         public void Trees_dontCompare_theirNeutron() {
             var a = Sigo.Create(3, "k", "v");
             var b = Sigo.Create(3, "k", "v").Freeze();
-            Assert.NotEqual(a.Flags, b.Flags);
+            SigoAssert.NotEqual(a.Flags, b.Flags);
 
-            Assert.Equal(a, b);
+            SigoAssert.Equal(a, b);
         }
 
         [Fact]
         public void Trees_dontCompare_theirChildOder() {
             var a = Sigo.Create(3, "k1", "v1", "k2", "v2");
             var b = Sigo.Create(3, "k2", "v2", "k1", "v1");
-            Assert.NotEqual(a.Keys.First(), b.Keys.First());
+            SigoAssert.NotEqual(a.Keys.First(), b.Keys.First());
 
-            Assert.Equal(a, b);
+            SigoAssert.Equal(a, b);
         }
 
         [Fact]
@@ -88,8 +88,8 @@ namespace Sigobase.Tests {
             var a2 = Sigo.Create(0, "a/b/c/d", "v+");
             var b1 = Sigo.Create(0, "a/b/c/d", "v-");
 
-            Assert.Equal(a1, a2);
-            Assert.NotEqual(a1, b1);
+            SigoAssert.Equal(a1, a2);
+            SigoAssert.NotEqual(a1, b1);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Sigobase.Tests {
 
             foreach (var a in list) {
                 foreach (var b in list) {
-                    Assert.Equal(Sigo.Equals(a, b), a.Equals((object)b));
+                    SigoAssert.Equal(Sigo.Equals(a, b), a.Equals((object)b));
                 }
             }
         }

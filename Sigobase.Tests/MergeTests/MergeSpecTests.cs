@@ -18,14 +18,14 @@ namespace Sigobase.Tests.MergeTests {
             var r = ImplMergeSpec.Merge(a, b);
 
             // r equal b...
-            Assert.Equal(r, b);
+            SigoAssert.Equal(r, b);
 
             // ...but not same b...
-            Assert.NotSame(r, b);
+            SigoAssert.NotSame(r, b);
 
             // ...because there is r[x] == a[x]
-            Assert.Equal(r["x"], a["x"]);
-            Assert.Same(r["x"], a["x"]);
+            SigoAssert.Equal(r["x"], a["x"]);
+            SigoAssert.Same(r["x"], a["x"]);
         }
     }
 }

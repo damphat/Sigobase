@@ -22,7 +22,7 @@ namespace Sigobase.Tests.Language {
         public void NumberTest(string src, double value) {
             var lexer = new Lexer(src);
             var token = lexer.Read(null);
-            Assert.Equal(value, token.Value);
+            SigoAssert.Equal(value, token.Value);
         }
 
         [Theory]
@@ -37,9 +37,9 @@ namespace Sigobase.Tests.Language {
         public void CommentTest(string src) {
             var lexer = new Lexer(src + 1);
             var token = lexer.Read(null);
-            Assert.Equal(Kind.Number, token.Kind);
-            Assert.Equal(src.Length, token.Start);
-            Assert.Equal("1", token.Raw);
+            SigoAssert.Equal(Kind.Number, token.Kind);
+            SigoAssert.Equal(src.Length, token.Start);
+            SigoAssert.Equal("1", token.Raw);
         }
 
         [Theory]
@@ -51,7 +51,7 @@ namespace Sigobase.Tests.Language {
         public void CommentEofTest(string src) {
             var lexer = new Lexer(src);
             var token = lexer.Read(null);
-            Assert.Equal(Kind.Eof, token.Kind);
+            SigoAssert.Equal(Kind.Eof, token.Kind);
         }
 
         [Theory]
@@ -59,9 +59,9 @@ namespace Sigobase.Tests.Language {
         public void SeparatorTest(string src, int start, int sep) {
             var lexer = new Lexer(src);
             var token = lexer.Read(null);
-            Assert.Equal(src, token.Src);
-            Assert.Equal(start, token.Start);
-            Assert.Equal(sep, token.Separator);
+            SigoAssert.Equal(src, token.Src);
+            SigoAssert.Equal(start, token.Start);
+            SigoAssert.Equal(sep, token.Separator);
         }
 
         public static IEnumerable<object[]> SeparatorData() {
@@ -141,19 +141,19 @@ namespace Sigobase.Tests.Language {
         public void TokenTest(Kind kind, string src, int start, int end) {
             var lexer = new Lexer(src);
             var token = lexer.Read(null);
-            Assert.Equal(kind, token.Kind);
-            Assert.Equal(start, token.Start);
-            Assert.Equal(end, token.End);
+            SigoAssert.Equal(kind, token.Kind);
+            SigoAssert.Equal(start, token.Start);
+            SigoAssert.Equal(end, token.End);
 
             switch (kind) {
                 case Kind.Number:
-                    Assert.Equal(double.Parse(src.Substring(start, end - start)), token.Value);
+                    SigoAssert.Equal(double.Parse(src.Substring(start, end - start)), token.Value);
                     break;
                 case Kind.String:
-                    Assert.Equal(src.Substring(start + 1, end - start - 2), token.Value);
+                    SigoAssert.Equal(src.Substring(start + 1, end - start - 2), token.Value);
                     break;
                 default:
-                    Assert.Null(token.Value);
+                    SigoAssert.Null(token.Value);
                     break;
             }
         }

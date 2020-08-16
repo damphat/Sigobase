@@ -10,9 +10,9 @@ namespace Sigobase.Tests {
             user = user.Set("name/last", Sigo.From("Dam"));
             user = user.Set("male", Sigo.From(true));
 
-            Assert.Equal("Phat", user.Get1("name").Get1("first").Data);
-            Assert.Equal("Dam", user.Get1("name").Get1("last").Data);
-            Assert.Equal(true, user.Get1("male").Data);
+            SigoAssert.Equal("Phat", user.Get1("name").Get1("first").Data);
+            SigoAssert.Equal("Dam", user.Get1("name").Get1("last").Data);
+            SigoAssert.Equal(true, user.Get1("male").Data);
         }
     }
 }

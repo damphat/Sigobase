@@ -9,12 +9,12 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Return_self() {
-            Assert.Same(s, s.Set1("k", Sigo.Create(3)));
+            SigoAssert.Same(s, s.Set1("k", Sigo.Create(3)));
         }
 
         [Fact]
         public void Return_element7() {
-            Assert.Same(Sigo.Create(7), s.Set1("k", Sigo.Create(7)));
+            SigoAssert.Same(Sigo.Create(7), s.Set1("k", Sigo.Create(7)));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Sigobase.Tests {
 
             foreach (var v in values) {
                 var ret = s.Set1("k", v);
-                Assert.Same(v, ret.Get1("k"));
+                SigoAssert.Same(v, ret.Get1("k"));
             }
         }
     }
@@ -53,9 +53,9 @@ namespace Sigobase.Tests {
             s = s.Set1("k1", v1);
             s = s.Set1("k2", v2);
 
-            Assert.Equal(v1, s.Get1("k1"));
-            Assert.Equal(v2, s.Get1("k2"));
-            Assert.Equal(256 * 2 + 6, s.Flags);
+            SigoAssert.Equal(v1, s.Get1("k1"));
+            SigoAssert.Equal(v2, s.Get1("k2"));
+            SigoAssert.Equal(256 * 2 + 6, s.Flags);
         }
 
         [Fact]
@@ -67,15 +67,15 @@ namespace Sigobase.Tests {
 
             // remove k1
             s = s.Set1("k1", e0);
-            Assert.Equal(e0, s.Get1("k1"));
-            Assert.Equal(v2, s.Get1("k2"));
-            Assert.Equal(256 + 6, s.Flags);
+            SigoAssert.Equal(e0, s.Get1("k1"));
+            SigoAssert.Equal(v2, s.Get1("k2"));
+            SigoAssert.Equal(256 + 6, s.Flags);
 
             // remove k2
             s = s.Set1("k2", e4);
-            Assert.Equal(e0, s.Get1("k1"));
-            Assert.Equal(e0, s.Get1("k2"));
-            Assert.Equal(e6, s);
+            SigoAssert.Equal(e0, s.Get1("k1"));
+            SigoAssert.Equal(e0, s.Get1("k2"));
+            SigoAssert.Equal(e6, s);
         }
 
         [Fact]
@@ -87,8 +87,8 @@ namespace Sigobase.Tests {
             // set again
             s = s.Set1("k", v2);
 
-            Assert.Equal(v2, s.Get1("k"));
-            Assert.Equal(256 + 6, s.Flags);
+            SigoAssert.Equal(v2, s.Get1("k"));
+            SigoAssert.Equal(256 + 6, s.Flags);
         }
 
         [Fact]
@@ -98,9 +98,9 @@ namespace Sigobase.Tests {
             // change parent proton by adding a child with L effect
             var s1 = s0.Set1("k2", e4);
 
-            Assert.Same(s0, s1);
-            Assert.Equal(e3, s1.Get1("k"));
-            Assert.Equal(Bits.LM, s1.Flags & Bits.LMR);
+            SigoAssert.Same(s0, s1);
+            SigoAssert.Equal(e3, s1.Get1("k"));
+            SigoAssert.Equal(Bits.LM, s1.Flags & Bits.LMR);
         }
 
         [Fact]
@@ -108,12 +108,12 @@ namespace Sigobase.Tests {
             var v = Sigo.From("v");
             var s = e3.Set1("k", v).Freeze();
 
-            Assert.Same(s, s.Set1("k", v));
-            Assert.Same(s, s.Set1("k1", e3));
-            Assert.Same(s, s.Set1("k1", e7));
+            SigoAssert.Same(s, s.Set1("k", v));
+            SigoAssert.Same(s, s.Set1("k1", e3));
+            SigoAssert.Same(s, s.Set1("k1", e7));
 
             // using Sigo.Same(), insteadOf referenceEquals
-            Assert.Same(s, s.Set1("k", Sigo.From("v")));
+            SigoAssert.Same(s, s.Set1("k", Sigo.From("v")));
         }
     }
 
@@ -131,9 +131,9 @@ namespace Sigobase.Tests {
             var s1 = s0.Set1("k1", v1).Freeze();
             var s2 = s1.Set1("k2", v2).Freeze();
 
-            Assert.Equal(v1, s2.Get1("k1"));
-            Assert.Equal(v2, s2.Get1("k2"));
-            Assert.Equal(256 * 2 + 16 + 6, s2.Flags);
+            SigoAssert.Equal(v1, s2.Get1("k1"));
+            SigoAssert.Equal(v2, s2.Get1("k2"));
+            SigoAssert.Equal(256 * 2 + 16 + 6, s2.Flags);
         }
 
         [Fact]
@@ -145,15 +145,15 @@ namespace Sigobase.Tests {
 
             // remove k1
             var s3 = s2.Set1("k1", e0).Freeze();
-            Assert.Equal(e0, s3.Get1("k1"));
-            Assert.Equal(v2, s3.Get1("k2"));
-            Assert.Equal(256 + 16 + 6, s3.Flags);
+            SigoAssert.Equal(e0, s3.Get1("k1"));
+            SigoAssert.Equal(v2, s3.Get1("k2"));
+            SigoAssert.Equal(256 + 16 + 6, s3.Flags);
 
             // remove k2
             var s4 = s3.Set1("k2", e4).Freeze();
-            Assert.Equal(e0, s4.Get1("k1"));
-            Assert.Equal(e0, s4.Get1("k2"));
-            Assert.Equal(e6, s4);
+            SigoAssert.Equal(e0, s4.Get1("k1"));
+            SigoAssert.Equal(e0, s4.Get1("k2"));
+            SigoAssert.Equal(e6, s4);
         }
 
         [Fact]
@@ -165,8 +165,8 @@ namespace Sigobase.Tests {
             // set again
             var s2 = s1.Set1("k", v2).Freeze();
 
-            Assert.Equal(v2, s2.Get1("k"));
-            Assert.Equal(256 + 16 + 6, s2.Flags);
+            SigoAssert.Equal(v2, s2.Get1("k"));
+            SigoAssert.Equal(256 + 16 + 6, s2.Flags);
         }
 
         [Fact]
@@ -176,8 +176,8 @@ namespace Sigobase.Tests {
             // change parent proton by adding a child with L effect
             var s1 = s0.Set1("k2", e4).Freeze();
 
-            Assert.Equal(e3, s1.Get1("k"));
-            Assert.Equal(Bits.LM, s1.Flags & Bits.LMR);
+            SigoAssert.Equal(e3, s1.Get1("k"));
+            SigoAssert.Equal(Bits.LM, s1.Flags & Bits.LMR);
         }
     }
 }

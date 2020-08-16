@@ -10,7 +10,7 @@ namespace Sigobase.Tests {
         [InlineData("/")]
         public void AllowPathWithoutKeys_returnTheChild(string path) {
             var value = Sigo.From("child");
-            Assert.Equal(value, Sigo.Create(3, path, value));
+            SigoAssert.Equal(value, Sigo.Create(3, path, value));
         }
 
         [Theory]
@@ -21,7 +21,7 @@ namespace Sigobase.Tests {
         [InlineData(double.PositiveInfinity, "Infinity")]
         public void AllowPathFromObject(object key, string sameAs) {
             var sigo = Sigo.Create(3, key, "v");
-            Assert.Equal("v", sigo.Get1(sameAs).Data);
+            SigoAssert.Equal("v", sigo.Get1(sameAs).Data);
         }
 
         [Fact]
@@ -31,9 +31,9 @@ namespace Sigobase.Tests {
                 "name/last", "Dam",
                 "male", true);
 
-            Assert.Equal("Phat", user.Get1("name").Get1("first").Data);
-            Assert.Equal("Dam", user.Get1("name").Get1("last").Data);
-            Assert.Equal(true, user.Get1("male").Data);
+            SigoAssert.Equal("Phat", user.Get1("name").Get1("first").Data);
+            SigoAssert.Equal("Dam", user.Get1("name").Get1("last").Data);
+            SigoAssert.Equal(true, user.Get1("male").Data);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Sigobase.Tests {
                 "user/id", 200.0,
                 "user/id", 200.0);
 
-            Assert.Equal(200.0, user.Get1("user").Get1("id").Data);
+            SigoAssert.Equal(200.0, user.Get1("user").Get1("id").Data);
         }
 
         [Theory(Skip = "TODO")]
@@ -57,9 +57,9 @@ namespace Sigobase.Tests {
         [InlineData(true, "a/1")]
         public void TODO_strict(bool allow, string path) {
             if (allow) {
-                Assert.Equal("v", Sigo.Create(3, path, "v").Get(path).Data);
+                SigoAssert.Equal("v", Sigo.Create(3, path, "v").Get(path).Data);
             } else {
-                Assert.ThrowsAny<Exception>(() => Sigo.Create(3, path, "v"));
+                SigoAssert.ThrowsAny<Exception>(() => Sigo.Create(3, path, "v"));
             }
         }
     }

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using Sigobase.Database;
 
-namespace Sigobase.Generator.Tests {
-    public static class Assert {
+namespace Sigobase.Tests {
+    // this class is an attempt to hide Xunit.Assert
+    public static class Assert {}
+
+    public static class SigoAssert {
         public static readonly IEqualityComparer<ISigo> Comparer = new SigoComparer();
 
         public static void Equal<T>(T a, T b) {

@@ -18,8 +18,8 @@ namespace Sigobase.Tests {
             foreach (var scalar in inputs) {
                 var sigo = Sigo.From(scalar);
 
-                Assert.True(sigo.IsLeaf());
-                Assert.Equal(scalar, sigo.Data);
+                SigoAssert.True(sigo.IsLeaf());
+                SigoAssert.Equal(scalar, sigo.Data);
             }
         }
 
@@ -35,7 +35,7 @@ namespace Sigobase.Tests {
             foreach (var number in inputs) {
                 var sigo = Sigo.From(number);
 
-                Assert.Equal(Convert.ToDouble(number), sigo.Data);
+                SigoAssert.Equal(Convert.ToDouble(number), sigo.Data);
             }
         }
 
@@ -50,7 +50,7 @@ namespace Sigobase.Tests {
             foreach (var o in inputs) {
                 var sigo = Sigo.From(o);
 
-                Assert.Same(o, sigo);
+                SigoAssert.Same(o, sigo);
             }
         }
 
@@ -64,8 +64,8 @@ namespace Sigobase.Tests {
             foreach (var o in inputs) {
                 var sigo = Sigo.From(o);
 
-                Assert.True(sigo.IsTree());
-                Assert.Equal("v", sigo.Get1("k").Data);
+                SigoAssert.True(sigo.IsTree());
+                SigoAssert.Equal("v", sigo.Get1("k").Data);
             }
         }
 
@@ -79,9 +79,9 @@ namespace Sigobase.Tests {
             foreach (var o in inputs) {
                 var sigo = Sigo.From(o);
 
-                Assert.True(sigo.IsTree());
-                Assert.Equal("a", sigo.Get1("0").Data);
-                Assert.Equal("b", sigo.Get1("1").Data);
+                SigoAssert.True(sigo.IsTree());
+                SigoAssert.Equal("a", sigo.Get1("0").Data);
+                SigoAssert.Equal("b", sigo.Get1("1").Data);
             }
         }
     }

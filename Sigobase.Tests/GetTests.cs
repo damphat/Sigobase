@@ -36,7 +36,7 @@ namespace Sigobase.Tests {
 
             foreach (var sigo in sigos) {
                 foreach (var path in paths) {
-                    Assert.Same(sigo, sigo.Get(path));
+                    SigoAssert.Same(sigo, sigo.Get(path));
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Sigobase.Tests {
             foreach (var sigo in sigos) {
                 foreach (var path in paths) {
                     var key = path.Replace("/", "");
-                    Assert.Same(sigo.Get1(key), sigo.Get(path));
+                    SigoAssert.Same(sigo.Get1(key), sigo.Get(path));
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace Sigobase.Tests {
                 foreach (var path in paths) {
                     var keys = path.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
 
-                    Assert.Same(
+                    SigoAssert.Same(
                         sigo.Get1(keys[0]).Get1(keys[1]),
                         sigo.Get(path)
                     );

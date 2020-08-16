@@ -9,29 +9,29 @@ namespace Sigobase.Tests {
 
         [Fact]
         public void Freeze_always_returns_self() {
-            Assert.Same(tree, tree.Freeze());
-            Assert.Same(leaf, leaf.Freeze());
-            Assert.Same(e3, e3.Freeze());
+            SigoAssert.Same(tree, tree.Freeze());
+            SigoAssert.Same(leaf, leaf.Freeze());
+            SigoAssert.Same(e3, e3.Freeze());
         }
 
         [Fact]
         public void NonEmptyTree_areNotFrozen_after_creating_or_changing() {
             // non empty tree are not frozen after creating
-            Assert.False(tree.IsFrozen());
+            SigoAssert.False(tree.IsFrozen());
 
             // not frozen after changing
             tree = tree.Freeze().Set1("v", Sigo.From("v+"));
-            Assert.False(tree.IsFrozen());
+            SigoAssert.False(tree.IsFrozen());
 
             // leafs and elements are frozen always frozen
-            Assert.True(leaf.IsFrozen());
-            Assert.True(e3.IsFrozen());
+            SigoAssert.True(leaf.IsFrozen());
+            SigoAssert.True(e3.IsFrozen());
         }
 
         [Fact]
         public void Frozen_a_nonFrozen() {
             tree.Freeze();
-            Assert.True(tree.IsFrozen());
+            SigoAssert.True(tree.IsFrozen());
         }
     }
 }

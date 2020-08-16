@@ -21,14 +21,14 @@ namespace Sigobase.Tests.Language {
         public void Leaf_numberTests(string src) {
             var num = double.Parse(src, CultureInfo.InvariantCulture);
 
-            Assert.Equal(Sigo.From(num), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.From(num), Sigo.Parse(src));
         }
 
         [Theory]
         [InlineData("true", true)]
         [InlineData("false", false)]
         public void Leaf_boolTests(string src, bool value) {
-            Assert.Equal(Sigo.From(value), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.From(value), Sigo.Parse(src));
         }
 
         [Theory]
@@ -39,7 +39,7 @@ namespace Sigobase.Tests.Language {
         [InlineData(@"'\u0123\u4567\u8901'", "\u0123\u4567\u8901")]
         [InlineData(@"'\uabcd\uefAB\uCDEF'", "\uabcd\uefAB\uCDEF")]
         public void Leaf_stringTests(string src, string value) {
-            Assert.Equal(Sigo.From(value), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.From(value), Sigo.Parse(src));
         }
 
         [Theory]
@@ -48,19 +48,19 @@ namespace Sigobase.Tests.Language {
         [InlineData(" ' \\' '", " ' ")]
         [InlineData(" \" ' \"", " ' ")]
         public void Leaf_stringQuoteTests(string src, string value) {
-            Assert.Equal(Sigo.From(value), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.From(value), Sigo.Parse(src));
         }
 
         [Theory]
         [MemberData(nameof(ObjectData), null)]
         public void Object_tests(SigoWraper wraper) {
-            Assert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
+            SigoAssert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
         }
 
         [Theory]
         [MemberData(nameof(ObjectData), "{?}")]
         public void Object_emptyTests(SigoWraper wraper) {
-            Assert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
+            SigoAssert.Equal(wraper.Sigo, Sigo.Parse(wraper.ToString()));
         }
 
         [Theory(Skip = "TODO")]
@@ -71,7 +71,7 @@ namespace Sigobase.Tests.Language {
         [InlineData("123")]
         [InlineData("'abc'")]
         public void TODO_Assign_to_literal(string name) {
-            Assert.ThrowsAny<Exception>(() => Sigo.Parse(name + " = 1"));
+            SigoAssert.ThrowsAny<Exception>(() => Sigo.Parse(name + " = 1"));
         }
 
         [Theory]
@@ -92,7 +92,7 @@ namespace Sigobase.Tests.Language {
                 return src;
             }
 
-            Assert.Equal(Sigo.Parse(Clean(src)), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.Parse(Clean(src)), Sigo.Parse(src));
         }
 
         public static IEnumerable<object[]> ObjectData(string schema = null) {
@@ -107,7 +107,7 @@ namespace Sigobase.Tests.Language {
         [Fact]
         public void Object_pathTest() {
             var expected = Sigo.Create(3, "name", Sigo.Create(3, "first", 1, "last", 2));
-            Assert.Equal(expected, Sigo.Parse("{name/first:1, name/last:2}"));
+            SigoAssert.Equal(expected, Sigo.Parse("{name/first:1, name/last:2}"));
         }
 
         [Theory]
@@ -122,7 +122,7 @@ namespace Sigobase.Tests.Language {
         [InlineData("[0;1;]", "{0:0,1:1}")]
         [InlineData("[[8,9]]", "{0:{0:8,1:9}}")]
         public void TODO_ArrayTest(string src, string expect) {
-            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
         }
 
         [Theory]
@@ -132,7 +132,7 @@ namespace Sigobase.Tests.Language {
         [InlineData("{NaN:1}", "{'NaN':1}")]
         [InlineData("{1.5:1}", "{'1.5':1}")]
         public void TODO_PathTest(string src, string expect) {
-            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
         }
 
         [Theory]
@@ -141,7 +141,7 @@ namespace Sigobase.Tests.Language {
         [InlineData("{1x:1}")]
         [InlineData("{x:1y:1}")]
         public void Object_errorTests(string src) {
-            Assert.ThrowsAny<Exception>(() => Sigo.Parse(src));
+            SigoAssert.ThrowsAny<Exception>(() => Sigo.Parse(src));
         }
 
         [Theory]
@@ -157,14 +157,14 @@ namespace Sigobase.Tests.Language {
         // value expected
         [InlineData(" [0,")]
         public void TODO_ArrayErrorTest(string src) {
-            Assert.ThrowsAny<Exception>(() => Sigo.Parse(src));
+            SigoAssert.ThrowsAny<Exception>(() => Sigo.Parse(src));
         }
 
         [Theory()]
         [InlineData("x=1; {x}", "{x:1}")]
         [InlineData("x=1; {a/x}", "{a/x:1}")]
         public void TODO_ContextTest(string a, string b) {
-            Assert.Equal(Sigo.Parse(a), Sigo.Parse(b));
+            SigoAssert.Equal(Sigo.Parse(a), Sigo.Parse(b));
         }
 
         [Fact(Skip = "TODO")]
@@ -192,7 +192,7 @@ namespace Sigobase.Tests.Language {
         [InlineData("{'/a//b/':1}", "{a:{b:1}}")]
         [InlineData("{'a'/'b':1}", "{a:{b:1}}")]
         public void TODO_PathAsString(string src, string expect) {
-            Assert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
+            SigoAssert.Equal(Sigo.Parse(expect), Sigo.Parse(src));
         }
     }
 

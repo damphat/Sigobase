@@ -8,46 +8,46 @@ namespace Sigobase.Tests.Language {
 
         [Fact]
         public void PropertiesTest() {
-            Assert.Equal(-1, lexer.Min);
-            Assert.Equal(2, lexer.Max);
-            Assert.Equal(0, lexer.Cursor);
+            SigoAssert.Equal(-1, lexer.Min);
+            SigoAssert.Equal(2, lexer.Max);
+            SigoAssert.Equal(0, lexer.Cursor);
 
             lexer.Move(2);
-            Assert.Equal(2, lexer.Cursor);
-            Assert.Equal("2", lexer.Peek(0).Raw);
+            SigoAssert.Equal(2, lexer.Cursor);
+            SigoAssert.Equal("2", lexer.Peek(0).Raw);
 
             lexer.Move(2);
-            Assert.Equal(4, lexer.Cursor);
-            Assert.Equal("4", lexer.Peek(0).Raw);
+            SigoAssert.Equal(4, lexer.Cursor);
+            SigoAssert.Equal("4", lexer.Peek(0).Raw);
 
             lexer.Peek(lexer.Max); // after peek max, you can Move min, but not min-1
             lexer.Move(-1);
-            Assert.Equal(3, lexer.Cursor);
-            Assert.Equal("3", lexer.Peek(0).Raw);
+            SigoAssert.Equal(3, lexer.Cursor);
+            SigoAssert.Equal("3", lexer.Peek(0).Raw);
 
-            Assert.ThrowsAny<Exception>(() => lexer.Peek(-1));
+            SigoAssert.ThrowsAny<Exception>(() => lexer.Peek(-1));
 
             // after move(-1) you have limitation
-            Assert.ThrowsAny<Exception>(() => lexer.Move(-1));
+            SigoAssert.ThrowsAny<Exception>(() => lexer.Move(-1));
         }
 
         [Fact]
         public void ItCanPeekInMinMax() {
             for (var i = 0; i <= 5; i++) {
                 // delta out of range
-                Assert.ThrowsAny<ArgumentOutOfRangeException>(() => lexer.Peek(-2));
-                Assert.ThrowsAny<ArgumentOutOfRangeException>(() => lexer.Peek(3));
+                SigoAssert.ThrowsAny<ArgumentOutOfRangeException>(() => lexer.Peek(-2));
+                SigoAssert.ThrowsAny<ArgumentOutOfRangeException>(() => lexer.Peek(3));
 
                 for (var d = lexer.Max; d >= lexer.Min; d--) {
                     if (i + d < 0) {
                         // negative position
-                        Assert.ThrowsAny<Exception>(() => lexer.Peek(d));
+                        SigoAssert.ThrowsAny<Exception>(() => lexer.Peek(d));
                     } else if (i + d > 5) {
                         // multiple eofs
-                        Assert.Equal(Kind.Eof, lexer.Peek(d).Kind);
+                        SigoAssert.Equal(Kind.Eof, lexer.Peek(d).Kind);
                     } else {
                         // return the token
-                        Assert.Equal((i + d).ToString(), lexer.Peek(d).Raw);
+                        SigoAssert.Equal((i + d).ToString(), lexer.Peek(d).Raw);
                     }
                 }
 
@@ -58,7 +58,7 @@ namespace Sigobase.Tests.Language {
         [Fact]
         public void ItCanMove() {
             lexer.Move(5);
-            Assert.Equal("5", lexer.Peek(0).Raw);
+            SigoAssert.Equal("5", lexer.Peek(0).Raw);
         }
     }
 }
