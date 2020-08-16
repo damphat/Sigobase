@@ -1,0 +1,15 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Convert to native line endings on checkout.
+*.cs text
+*.csproj text
+*.props text
+*.targets text
+
+# Convert to CRLF line endings on checkout.
+*.sln text eol=crlf
+
+# Truly binary and should not be modified.
+*.png binary
+*.jpg binary
