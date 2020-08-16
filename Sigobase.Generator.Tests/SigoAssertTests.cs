@@ -2,7 +2,6 @@
 using Xunit;
 
 namespace Sigobase.Generator.Tests {
-
     public class SigoAssertTests {
         [Fact]
         public void ShouldEqual() {

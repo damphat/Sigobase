@@ -23,11 +23,11 @@ namespace Sigobase.Generator.Utils {
             }
 
             if (x == null) {
-                return -1;  // null < any
+                return -1; // null < any
             }
 
             if (y == null) {
-                return 1;   // any > null
+                return 1; // any > null
             }
 
             var tx = x.GetType();
@@ -66,11 +66,11 @@ namespace Sigobase.Generator.Utils {
             }
 
             if (x == null) {
-                return -1;  // null < any
+                return -1; // null < any
             }
 
             if (y == null) {
-                return 1;   // any > null
+                return 1; // any > null
             }
 
             // include neutrons

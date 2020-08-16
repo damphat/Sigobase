@@ -1,11 +1,10 @@
-﻿using Sigobase.Database;
-using Sigobase.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Sigobase.Database;
+using Sigobase.Utils;
 
 namespace Sigobase.Generator.REPL {
     internal class Program {
-
         private static void ShowSchemasAndHelp() {
             Console.WriteLine("Current Schemas:");
             foreach (var e in SigoSchema.Context) {
@@ -25,6 +24,7 @@ namespace Sigobase.Generator.REPL {
                 Console.WriteLine(value.ToString(Writer.Default));
                 count++;
             }
+
             Console.WriteLine("---------------------------------");
             Console.WriteLine($"{count} items.");
         }
@@ -60,12 +60,13 @@ namespace Sigobase.Generator.REPL {
                     case "quit":
                         return;
                     default: {
-
                         try {
                             var schema = SigoSchema.Parse(src);
-                            if(schema.Count() == 0) continue;
+                            if (schema.Count() == 0) {
+                                continue;
+                            }
 
-                           GenerateAllPossibleValues(schema);
+                            GenerateAllPossibleValues(schema);
                         } catch (Exception e) {
                             Console.Error.WriteLine(e.Message);
                         }

@@ -44,7 +44,7 @@ namespace Sigobase.Generator.Utils {
                     Next();
                     return key;
                 default:
-                    throw new Exception(Expected("key"));
+                    throw new InvalidOperationException(Expected("key"));
             }
         }
 
@@ -80,7 +80,7 @@ namespace Sigobase.Generator.Utils {
                 } else if (SigoSchema.Context.ContainsKey(key)) {
                     value = SigoSchema.Context[key];
                 } else {
-                    throw new Exception(Expected("':'"));
+                    throw new InvalidOperationException(Expected("':'"));
                 }
 
                 ret.Add(key, value, optional);
@@ -152,7 +152,7 @@ namespace Sigobase.Generator.Utils {
                 case "null":
                 case "NaN":
                 case "Infinity":
-                    throw new Exception($"'{t.Raw}' is not supported");
+                    throw new InvalidOperationException($"'{t.Raw}' is not supported");
                 default:
                     var key = t.Raw;
                     Next();
@@ -171,7 +171,7 @@ namespace Sigobase.Generator.Utils {
                 case Kind.Identifier:
                     return ParseIdentifier();
                 default:
-                    throw new Exception(Expected("value"));
+                    throw new InvalidOperationException(Expected("value"));
             }
         }
 
@@ -213,11 +213,15 @@ namespace Sigobase.Generator.Utils {
             }
         }
 
-        static readonly SigoSchema Nothing = new NothingSchema();
+        private static readonly SigoSchema Nothing = new NothingSchema();
+
         public SigoSchema Parse() {
             var ret = Nothing;
             while (true) {
-                if (t.Kind == Kind.Eof) return ret;
+                if (t.Kind == Kind.Eof) {
+                    return ret;
+                }
+
                 ret = ParseStatement();
                 ReadKind(Kind.SemiColon);
             }

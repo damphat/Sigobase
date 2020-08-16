@@ -4,7 +4,6 @@ using Sigobase.Database;
 using Sigobase.Generator.Utils;
 
 namespace Sigobase.Generator {
-
     // bad design: this class also contains a global context
     public abstract class SigoSchema {
         #region static
@@ -13,17 +12,17 @@ namespace Sigobase.Generator {
         public static readonly Dictionary<string, SigoSchema> Context = new Dictionary<string, SigoSchema>();
 
         public static void SetType(string name, SigoSchema value) {
-            Context[name] = value;
+            lock (Context) {
+                Context[name] = value;
+            }
         }
 
         public static SigoSchema GetType(string name) {
-            if (Context.TryGetValue(name, out var value)) {
-                return value;
-            } else {
+            lock (Context) {
                 if (Context.TryGetValue(name, out var schema)) {
                     return schema;
                 } else {
-                    throw new Exception($"schema '{name}' is not found");
+                    throw new InvalidOperationException($"schema '{name}' is not found");
                 }
             }
         }
@@ -37,9 +36,17 @@ namespace Sigobase.Generator {
         public abstract IEnumerable<ISigo> Generate(GenerateOptions options);
         public abstract int Count();
 
-        // TODO actually eval()
+        /// <summary>
+        /// Execute and make a SigoSchema.
+        /// 
+        /// To make sure no other process change the context, lock it
+        /// lock(SigoSchema.Context) { /*your code*/ }
+        /// </summary>
         public static SigoSchema Parse(string schemaSource) {
-            return new SchemaParser(schemaSource).Parse();
+            // lock the shared resource between threads
+            lock (Context) {
+                return new SchemaParser(schemaSource).Parse();
+            }
         }
     }
 }

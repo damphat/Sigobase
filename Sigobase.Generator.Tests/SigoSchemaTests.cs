@@ -161,9 +161,11 @@ namespace Sigobase.Generator.Tests {
 
         [Fact]
         public void Var_set_() {
-            Gen("money='USD'|'VND'");
-
-            SigoAssert.Equal(2, SigoSchema.Context["money"].Count());
+            // make sure no other test-thread mutate the context
+            lock (SigoSchema.Context) {
+                Gen("money='USD'|'VND'");
+                SigoAssert.Equal(2, SigoSchema.Context["money"].Count());
+            }
         }
 
         [Fact]
