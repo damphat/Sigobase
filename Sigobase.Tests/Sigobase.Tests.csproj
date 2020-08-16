@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="2.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -17,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sigobase.Generator\Sigobase.Generator.csproj" />
+<ProjectReference Include="..\Sigobase.Generator\Sigobase.Generator.csproj" />
     <ProjectReference Include="..\Sigobase\Sigobase.csproj" />
   </ItemGroup>
 
