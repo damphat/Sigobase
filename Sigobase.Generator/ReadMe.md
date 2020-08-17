@@ -102,6 +102,5 @@ schema> {money?}   // auto and optional
 ```
 
 ## TODO
-- [ ] `xUnit` is multithread. Make `Parse()` thread safe.
+- [x] `xUnit` is multithread. Make `Parse()` thread safe.
 - [ ] Loop detection `schema> Person = {me: Person}`
-- [ ] Change `schema.Parse()` to `schema.Eval()` ?
